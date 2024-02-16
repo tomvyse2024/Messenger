@@ -65,6 +65,7 @@
     font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
     margin-left: 6%;
     margin-top: 5%;
+   
 }
 ._9h0x ._6b6b {
     background: linear-gradient(81.84deg, #0099ff -9.4%, #a033ff 51.57%, #ff5280 84.07%, #ff7061 90.59%);
@@ -117,7 +118,18 @@
 color:blue;
 font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
 text-decoration:none;
+
 }
 .span{
     margin-left: 20%;
+}
+.img3{
+    width: 130px;
+    height: 40px;
+    margin-left: 20px;
+}
+.footer1{
+    margin-left:40px;
+    text-decoration: none;
+    color: initial;
 }

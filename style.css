@@ -1,0 +1,123 @@
+.menu{
+    margin-top: 2%;
+    background-color:white;
+    font-size:110%;
+    color: black;
+    font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
+}
+.menuitams{
+    text-decoration:#0084ff;
+}
+.logo{
+    width: 40px;
+    height: 40px;
+    margin-left: 6%;
+}
+.headtext{margin-left:50%;
+    text-decoration: dashed;
+    color: initial;
+    font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
+}
+.headtext1{margin-left:1%;
+    text-decoration: dashed;
+    color: initial;
+    font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
+}
+.left{
+    display:inline-block;
+    width: 38%;   
+    font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
+}
+
+.right{
+    display: inline-block;
+    width: 50%;
+    height: 60%;
+    font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
+   margin-left: 5%;
+}
+.img1 {
+    width:20%;
+    height: 10%;margin-left:20%;
+    margin-top: 10%;
+}
+.img2 {
+    width: 25%;
+    height: 10%;
+}
+.leftfontsize{
+    font-size: 100%;
+    margin-left: 20%;
+    margin-top:1%;
+    margin-bottom: 10%;
+}
+.rightimage{
+    width: 70%;
+    height: 70%;
+    margin-left:20%;
+}
+.container{
+    background-color:white;
+}
+
+.footer{
+    background-color:white;
+    font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
+    margin-left: 6%;
+    margin-top: 5%;
+}
+._9h0x ._6b6b {
+    background: linear-gradient(81.84deg, #0099ff -9.4%, #a033ff 51.57%, #ff5280 84.07%, #ff7061 90.59%);
+    -webkit-background-clip: text;
+    color: transparent;
+    font-size: 82px;
+    font-weight: 600;
+    letter-spacing: -2px;
+    line-height: 79px;
+    padding: 0 0 0px;
+    text-align: left;
+    word-break:break-word;
+    margin-left:20%;
+    font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
+}
+.input{
+    margin-left: 20%;
+    background: rgba(0, 0, 0, .04);
+    border: none;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: rgba(0, 0, 0, 1);
+    display: block;
+    font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
+    font-size: 19px;
+    height: 36px;
+    margin-bottom: 12px;
+    padding: 8px 16px;
+    width: 320px
+}
+.button{
+    margin-left: 20%;
+    background-color: #0084ff;
+    background-image: none;
+    border: 1px solid #0084ff;
+    border-radius: 24px;
+    color: #fff;
+    font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
+    font-size: 19px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 19px;
+    margin-bottom: 12px;
+    margin-top: 20px;
+    padding: 2px 20px 0;
+    width: auto;
+    margin-right: 5%;
+}
+.text{
+color:blue;
+font-family: Calibre, Helvetica Neue, Segoe UI, Helvetica, Arial, Lucida Grande, sans-serif;
+text-decoration:none;
+}
+.span{
+    margin-left: 20%;
+}

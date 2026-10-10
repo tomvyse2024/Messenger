@@ -1,272 +1,185 @@
-
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0756a5">
-  <title>Cash Receive</title>
+  <meta name="theme-color" content="#f5f5f5">
+  <title>Transfer</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
   <main class="app">
-    <header class="top-header">
-      <div class="brand-icon">CR</div>
-      <div class="brand-text">
-        <h1>Cash Receive</h1>
-        <p>Customer Receipt System</p>
-      </div>
-    </header>
+    <section id="transferPage" class="screen transfer-screen">
+      <header class="topbar">
+        <button class="back-arrow" id="backArrow" type="button" aria-label="Back">‹</button>
+        <div class="topbar-title">Transfer</div>
+        <button class="history-button" type="button" id="historyButton">History</button>
+      </header>
 
-    <div class="progress">
-      <span class="progress-step active" id="step1">1</span>
-      <span class="progress-line"></span>
-      <span class="progress-step" id="step2">2</span>
-      <span class="progress-line"></span>
-      <span class="progress-step" id="step3">3</span>
-    </div>
-
-    <!-- PAGE 1 -->
-    <section class="page active" id="page1">
-      <div class="page-heading">
-        <h2>Customer Information</h2>
-        <p>Please enter customer details below.</p>
+      <div class="recipient">
+        <div class="avatar" aria-hidden="true"><span></span></div>
+        <div class="recipient-name" id="recipientDisplay">MA TIN NILAR PHYO(*******4635)</div>
       </div>
 
-      <form id="customerForm">
-        <div class="form-group">
-          <label for="customerName">Customer Name</label>
-          <input
-            id="customerName"
-            type="text"
-            placeholder="Enter customer name"
-            autocomplete="name"
-            required
-          >
+      <form id="transferForm" class="transfer-card">
+        <label class="field-label" for="amount">Amount (Ks)</label>
+        <input id="amount" class="line-input amount-input" type="number" min="1" step="1" inputmode="decimal" placeholder="Enter Amount" required>
+
+        <label class="field-label notes-label" for="notes">Add Notes (Mandatory)</label>
+        <input id="notes" class="line-input notes-input" type="text" placeholder="Please add Notes" maxlength="100" required>
+
+        <div class="note-options" aria-label="Note suggestions">
+          <button type="button" class="note-chip" data-note="Salary">Salary</button>
+          <button type="button" class="note-chip" data-note="Payment">Payment</button>
+          <button type="button" class="note-chip" data-note="Bill">Bill</button>
+          <button type="button" class="note-chip" data-note="Family & Friends">Family &amp;<br>Friends</button>
         </div>
 
-        <div class="form-group">
-          <label for="customerAddress">Address</label>
-          <input
-            id="customerAddress"
-            type="text"
-            placeholder="Enter customer address"
-            autocomplete="street-address"
-            required
-          >
-        </div>
+        <button class="transfer-button" type="submit">Transfer</button>
 
-        <button class="primary-button" type="submit">
-          NEXT <span>→</span>
-        </button>
+        <div class="warnings">
+          <p>* Always check the recipient's phone number and the amount to avoid incorrect transactions and fraud.</p>
+          <p>* Please make sure to add notes to transfer.</p>
+        </div>
       </form>
-
-      <p class="warning">
-        သတိပြုရန် — အချက်အလက်များကို မှန်ကန်စွာ ဖြည့်သွင်းပေးပါ။
-      </p>
     </section>
 
-    <!-- PAGE 2 -->
-    <section class="page" id="page2">
-      <div class="page-heading">
-        <h2>Receive Payment</h2>
-        <p>Please check customer information and enter amount.</p>
-      </div>
+    <section id="receiptPage" class="screen receipt-screen" hidden>
+      <div class="receipt-card">
+        <header class="receipt-top">
+          <div class="bank-brand" aria-label="KBZ Bank">
+            <div class="bank-symbol"><span></span><i></i></div>
+            <div class="bank-name">KBZ BANK<small>STRENGTH OF MYANMAR</small></div>
+          </div>
+          <div class="receipt-title">E-Receipt</div>
+        </header>
 
-      <div class="customer-summary">
-        <div class="summary-row">
-          <span>Customer Name</span>
-          <strong id="summaryName"></strong>
-        </div>
+        <div class="receipt-content">
+          <div class="big-amount"><span id="receiptAmount">-0.00</span> <small>Ks</small></div>
 
-        <div class="summary-row">
-          <span>Address</span>
-          <strong id="summaryAddress"></strong>
-        </div>
-      </div>
-
-      <form id="amountForm">
-        <div class="form-group">
-          <label for="amount">Amount (MMK)</label>
-          <div class="amount-input-wrap">
-            <span class="currency">MMK</span>
-            <input
-              id="amount"
-              type="number"
-              min="1"
-              step="1"
-              inputmode="numeric"
-              placeholder="0"
-              required
-            >
+          <div class="details">
+            <div class="detail-row"><span>Transaction Time</span><strong id="receiptTime"></strong></div>
+            <div class="detail-row"><span>Transaction No</span><strong id="receiptNumber"></strong></div>
+            <div class="detail-row"><span>Transaction Type</span><strong>Transfer</strong></div>
+            <div class="detail-row"><span>Transfer To</span><strong id="receiptRecipient"></strong></div>
+            <div class="detail-row"><span>Amount</span><strong id="receiptAmountRow"></strong></div>
+            <div class="detail-row"><span>Notes</span><strong id="receiptNotes"></strong></div>
           </div>
         </div>
 
-        <button class="primary-button" type="submit">
-          PRINT <span>→</span>
-        </button>
+        <div class="perforation"><span></span><span></span></div>
 
-        <button class="secondary-button" id="backButton" type="button">
-          ← BACK
-        </button>
-      </form>
-
-      <p class="warning">
-        သတိပြုရန် — ငွေပမာဏကို သေချာစစ်ဆေးပြီးမှ ဆက်လက်လုပ်ဆောင်ပါ။
-      </p>
-    </section>
-
-    <!-- PAGE 3 -->
-    <section class="page" id="page3">
-      <div class="receipt" id="receipt">
-        <div class="receipt-header">
-          <div class="receipt-check">✓</div>
-          <h2>Cash Receive Receipt</h2>
-          <p>ငွေလက်ခံဖြတ်ပိုင်း</p>
+        <div class="receipt-bottom">
+          <div class="kbzpay-mark">KBZ<span>Pay</span><small>Scan to verify payment</small></div>
+          <div class="qr-wrap">
+            <div class="qr-placeholder" aria-label="QR code placeholder"></div>
+          </div>
+          <div class="thanks">Thank you for using KBZPay!</div>
         </div>
-
-        <div class="receipt-divider"></div>
-
-        <div class="receipt-row">
-          <span>Customer Name</span>
-          <strong id="receiptName"></strong>
-        </div>
-
-        <div class="receipt-row">
-          <span>Address</span>
-          <strong id="receiptAddress"></strong>
-        </div>
-
-        <div class="receipt-row">
-          <span>Date &amp; Time</span>
-          <strong id="receiptDate"></strong>
-        </div>
-
-        <div class="receipt-divider"></div>
-
-        <div class="receipt-amount">
-          <span>Received Amount</span>
-          <strong><span id="receiptAmount"></span> MMK</strong>
-        </div>
-
-        <div class="thank-you">
-          အားပေးမှုအတွက် ကျေးဇူးတင်ပါတယ်
-        </div>
-
-        <p class="receipt-note">
-          This receipt records the details entered by the user.
-        </p>
       </div>
 
-      <button class="primary-button print-button" id="printButton" type="button">
-        PRINT RECEIPT
-      </button>
-
-      <button class="secondary-button" id="okButton" type="button">
-        OK
-      </button>
-
-      <p class="warning">
-        သတိပြုရန် — ဤဖြတ်ပိုင်းပါ အချက်အလက်များကို မထွက်ခွာမီ စစ်ဆေးပါ။
-      </p>
+      <p class="receipt-disclaimer">The e-receipt only means you already paid for the merchant. You need to confirm the final transaction status with merchant.</p>
+      <button type="button" class="new-transfer" id="newTransfer">New Transfer</button>
     </section>
-
-    <footer class="footer">
-      <p>Cash Receive System</p>
-    </footer>
   </main>
 
   <script>
-    const pages = [
-      document.getElementById("page1"),
-      document.getElementById("page2"),
-      document.getElementById("page3")
-    ];
+    const transferForm = document.getElementById("transferForm");
+    const amountInput = document.getElementById("amount");
+    const notesInput = document.getElementById("notes");
 
-    function showPage(pageNumber) {
-      pages.forEach((page, index) => {
-        page.classList.toggle("active", index === pageNumber - 1);
+    document.querySelectorAll(".note-chip").forEach(button => {
+      button.addEventListener("click", () => {
+        notesInput.value = button.dataset.note;
+        notesInput.focus();
+        document.querySelectorAll(".note-chip").forEach(chip => chip.classList.remove("selected"));
+        button.classList.add("selected");
       });
-
-      [1, 2, 3].forEach(number => {
-        document.getElementById("step" + number)
-          .classList.toggle("active", number <= pageNumber);
-      });
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    const customerForm = document.getElementById("customerForm");
-    const amountForm = document.getElementById("amountForm");
-
-    customerForm.addEventListener("submit", function(event) {
-      event.preventDefault();
-
-      const name = document.getElementById("customerName").value.trim();
-      const address = document.getElementById("customerAddress").value.trim();
-
-      if (!name || !address) return;
-
-      document.getElementById("summaryName").textContent = name;
-      document.getElementById("summaryAddress").textContent = address;
-
-      showPage(2);
     });
 
-    amountForm.addEventListener("submit", function(event) {
+    document.getElementById("backArrow").addEventListener("click", () => {
+      if (!document.getElementById("receiptPage").hidden) {
+        showTransfer();
+      } else {
+        amountInput.focus();
+      }
+    });
+
+    document.getElementById("historyButton").addEventListener("click", () => {
+      alert("History is a visual placeholder in this demo.");
+    });
+
+    transferForm.addEventListener("submit", event => {
       event.preventDefault();
 
-      const amount = Number(document.getElementById("amount").value);
+      const amount = Number(amountInput.value);
+      const notes = notesInput.value.trim();
 
       if (!Number.isFinite(amount) || amount <= 0) {
-        alert("မှန်ကန်သော ငွေပမာဏကို ထည့်သွင်းပေးပါ။");
+        alert("Please enter a valid amount.");
+        amountInput.focus();
         return;
       }
 
-      document.getElementById("receiptName").textContent =
-        document.getElementById("customerName").value.trim();
+      if (!notes) {
+        alert("Please add notes to transfer.");
+        notesInput.focus();
+        return;
+      }
 
-      document.getElementById("receiptAddress").textContent =
-        document.getElementById("customerAddress").value.trim();
-
-      document.getElementById("receiptAmount").textContent =
-        new Intl.NumberFormat("en-US", {
-          maximumFractionDigits: 0
-        }).format(amount);
-
-      document.getElementById("receiptDate").textContent =
-        new Date().toLocaleString();
-
-      showPage(3);
-    });
-
-    document.getElementById("backButton").addEventListener("click", function() {
-      showPage(1);
-    });
-
-    document.getElementById("okButton").addEventListener("click", function() {
-      customerForm.reset();
-      amountForm.reset();
-
-      [
-        "summaryName",
-        "summaryAddress",
-        "receiptName",
-        "receiptAddress",
-        "receiptAmount",
-        "receiptDate"
-      ].forEach(id => {
-        document.getElementById(id).textContent = "";
+      const formatted = amount.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
       });
 
-      showPage(1);
-      document.getElementById("customerName").focus();
+      document.getElementById("receiptAmount").textContent = "-" + formatted;
+      document.getElementById("receiptAmountRow").textContent = "-" + formatted + " Ks";
+      document.getElementById("receiptNotes").textContent = notes;
+
+      document.getElementById("receiptTime").textContent =
+        new Date().toLocaleString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false
+        }).replace(",", "");
+
+      document.getElementById("receiptNumber").textContent = makeTransactionNumber();
+      document.getElementById("receiptRecipient").textContent =
+        document.getElementById("recipientDisplay").textContent;
+
+      document.getElementById("transferPage").hidden = true;
+      document.getElementById("receiptPage").hidden = false;
+      window.scrollTo({ top: 0, behavior: "instant" });
     });
 
-    document.getElementById("printButton").addEventListener("click", function() {
-      window.print();
-    });
+    document.getElementById("newTransfer").addEventListener("click", showTransfer);
+
+    function showTransfer() {
+      document.getElementById("receiptPage").hidden = true;
+      document.getElementById("transferPage").hidden = false;
+      transferForm.reset();
+
+      document.querySelectorAll(".note-chip").forEach(chip => {
+        chip.classList.remove("selected");
+      });
+
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    function makeTransactionNumber() {
+      const digits = "0123456789";
+      let result = "";
+
+      for (let i = 0; i < 19; i++) {
+        result += digits[Math.floor(Math.random() * digits.length)];
+      }
+
+      return result;
+    }
   </script>
 </body>
 </html>

@@ -7,11 +7,7 @@
   --blue: #0756a5;
   --blue-dark: #06427f;
   --blue-light: #e6f1ff;
-  --selected-blue: #0756a5;
   --bg: #f5f5f5;
-  --text: #111111;
-  --muted: #999999;
-  --border: #e5e5e5;
 }
 
 html {
@@ -21,9 +17,8 @@ html {
 
 body {
   margin: 0;
-  min-height: 100vh;
   background: var(--bg);
-  color: var(--text);
+  color: #171717;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
 }
@@ -34,8 +29,8 @@ input {
 }
 
 button {
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
 }
 
 [hidden] {
@@ -46,7 +41,7 @@ button {
   width: 100%;
   max-width: 576px;
   min-height: 100vh;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .page {
@@ -62,7 +57,7 @@ button {
 .topbar {
   display: flex;
   align-items: center;
-  gap: 17px;
+  gap: 16px;
   height: 124px;
   padding: 40px 22px 0;
   background: var(--blue);
@@ -70,98 +65,77 @@ button {
   font-size: 22px;
 }
 
-.back-icon {
+.back-arrow {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   flex-shrink: 0;
-  border: none;
+  padding: 0;
+  border: 0;
   background: transparent;
-  color: inherit;
+  color: white;
   font-size: 38px;
   font-weight: 300;
-  text-decoration: none;
-  cursor: pointer;
 }
 
 .history {
   margin-left: auto;
-  font-size: 19px;
+  font-size: 18px;
 }
 
-.form-card {
+/* PAGE 1 */
+
+.page1-card {
   margin: 20px 22px;
-  padding: 25px 26px;
-  border-radius: 18px;
+  padding: 26px;
+  border-radius: 17px;
   background: white;
-  box-shadow: 0 2px 5px #00000010;
+  box-shadow: 0 2px 7px #0000000d;
 }
 
-.section-title {
-  font-size: 22px;
-  font-weight: 600;
-}
-
-.subtitle {
-  margin: 5px 0 25px;
-  color: #888;
-  font-size: 14px;
-}
-
-.form-card label {
+.page1-card label {
   display: block;
-  margin: 18px 0 8px;
+  margin: 0 0 8px;
+  color: #555;
   font-size: 15px;
 }
 
-.form-card input:not([type="hidden"]) {
+.page1-card input {
   width: 100%;
-  min-width: 0;
-  height: 55px;
+  height: 54px;
+  margin-bottom: 25px;
   padding: 0 2px;
-  border: none;
+  border: 0;
   border-bottom: 1px solid #ddd;
   border-radius: 0;
   outline: none;
   background: transparent;
-  color: #222;
   font-size: 16px;
 }
 
-.form-card input:focus {
+.page1-card input:focus {
   border-bottom: 2px solid var(--blue);
 }
 
-.form-card input::placeholder {
-  color: #c0c0c0;
+input::placeholder {
+  color: #bdbdbd;
 }
 
 .primary-button {
-  display: block;
   width: 100%;
-  min-height: 65px;
-  margin-top: 28px;
+  min-height: 60px;
   padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: var(--blue-light);
+  border: 0;
+  border-radius: 9px;
+  background: #91b3da;
   color: white;
-  font-size: 23px;
-  font-weight: 400;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  font-size: 22px;
+  transition: background 0.2s;
 }
 
 .primary-button:active {
-  background: var(--blue-dark);
-}
-
-.warning {
-  margin-top: 20px;
-  color: #b96d6d;
-  font-size: 13px;
-  line-height: 1.6;
+  background: var(--blue);
 }
 
 /* PAGE 2 */
@@ -169,9 +143,9 @@ button {
 .recipient {
   display: flex;
   align-items: center;
-  gap: 14px;
-  min-height: 83px;
-  padding: 12px 22px 17px;
+  gap: 13px;
+  min-height: 84px;
+  padding: 13px 22px;
 }
 
 .avatar {
@@ -214,7 +188,7 @@ button {
   font-size: 19px;
 }
 
-.recipient-phone {
+.recipient-info-text {
   margin-top: 3px;
   color: #777;
   font-size: 14px;
@@ -222,25 +196,27 @@ button {
 }
 
 .transfer-card {
-  margin: 0;
-  padding: 23px 22px 25px;
+  padding: 24px 22px;
   border-radius: 20px 20px 0 0;
-  box-shadow: none;
+  background: white;
 }
 
 .transfer-card label {
-  margin: 0 0 8px;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
 }
 
 .transfer-card .line-input {
   display: block;
-  height: 65px;
-  padding: 0;
-  border: none;
+  width: 100%;
+  height: 61px;
+  padding: 0 2px;
+  border: 0;
   border-bottom: 1px solid #e2e2e2;
   border-radius: 0;
-  background: transparent;
   outline: none;
+  background: transparent;
   font-size: 17px;
 }
 
@@ -249,104 +225,96 @@ button {
 }
 
 .transfer-card .notes-label {
-  margin-top: 23px;
+  margin-top: 22px;
 }
 
 .note-options {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-  margin: 12px 0 36px;
+  gap: 9px;
+  margin: 14px 0 32px;
 }
-
-/* Payment type buttons */
 
 .note-chip {
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 0;
-  min-height: 49px;
-  padding: 6px 3px;
+  min-height: 48px;
+  padding: 5px 3px;
   border: 1px solid transparent;
   border-radius: 9px;
-  background: #f3f3f3;
-  color: #222;
-  font-size: 14px;
+  background: #f1f1f1;
+  color: #333;
+  font-size: 13px;
   line-height: 1.3;
   text-align: center;
-  cursor: pointer;
-  transition:
-    background 0.18s ease,
-    color 0.18s ease,
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    transform 0.18s ease;
+  transition: all 0.18s ease;
 }
-
-/* Selected state: bright blue */
 
 .note-chip.selected,
 .note-chip[aria-pressed="true"] {
-  border-color: var(--selected-blue);
-  background: var(--selected-blue);
-  color: #ffffff;
-  font-weight: 600;
-  box-shadow: 0 3px 10px #0756a54a;
-  transform: translateY(-1px);
+  border-color: var(--blue);
+  background: var(--blue);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 3px 12px #0756a54a;
+  transform: translateY(-2px);
 }
 
-/* Keyboard focus */
-
 .note-chip:focus-visible {
-  outline: 3px solid #90bff0;
-  outline-offset: 3px;
+  outline: 3px solid #9dc8f5;
+  outline-offset: 2px;
 }
 
 .transfer-button {
-  margin-top: 0;
+  background: var(--blue);
+  color: white;
+}
+
+.transfer-button:active {
+  background: var(--blue-dark);
 }
 
 .warnings {
-  padding: 21px 4px 0;
-  color: #bd7474;
-  font-size: 16px;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
+  padding: 20px 3px 0;
+  color: #b96e6e;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .warnings p {
   margin: 0 0 7px;
 }
 
-/* PASSWORD DIALOG */
+/* PASSWORD */
 
 .modal {
   position: fixed;
-  z-index: 20;
+  z-index: 100;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 22px;
+  padding: 20px;
   background: #0006;
 }
 
 .password-box {
   width: 100%;
-  max-width: 360px;
-  padding: 25px 22px;
-  border-radius: 16px;
+  max-width: 350px;
+  padding: 24px;
+  border-radius: 15px;
   background: white;
-  box-shadow: 0 8px 35px #0003;
+  box-shadow: 0 10px 35px #0003;
 }
 
 .password-box h2 {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-size: 22px;
 }
 
-.password-box p {
+.password-box > p {
   color: #777;
   font-size: 14px;
 }
@@ -360,21 +328,21 @@ button {
   outline-color: var(--blue);
 }
 
-.password-box .error-message {
+.error-message {
   min-height: 18px;
-  margin: 7px 0;
   color: #c62828;
+  font-size: 13px;
 }
 
 .modal-buttons {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .modal-buttons button {
   flex: 1;
-  min-height: 45px;
-  border: none;
+  min-height: 44px;
+  border: 0;
   border-radius: 8px;
 }
 
@@ -387,17 +355,17 @@ button {
   color: white;
 }
 
-/* PAGE 3: RECEIPT */
+/* PAGE 3 RECEIPT */
 
 .receipt-screen {
   min-height: 100vh;
-  padding: 5.5vh 4.3% 25px;
+  padding: 5vh 4%;
   background: var(--blue);
 }
 
 .receipt-card {
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 5px;
   background: white;
 }
 
@@ -406,15 +374,15 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  min-height: 90px;
-  padding: 16px;
+  min-height: 83px;
+  padding: 13px;
   background: #f0f0f0;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   min-width: 0;
 }
 
@@ -422,18 +390,18 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border: 2px solid var(--blue);
-  border-radius: 8px;
+  border-radius: 7px;
   color: var(--blue);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 800;
 }
 
 .brand-name {
   color: var(--blue);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
 }
 
@@ -445,28 +413,27 @@ button {
 }
 
 .receipt-title {
-  font-size: clamp(21px, 4.8vw, 32px);
+  font-size: clamp(20px, 4.5vw, 30px);
   white-space: nowrap;
 }
 
 .demo-label {
-  padding: 8px;
-  background: #fff6df;
-  color: #805d12;
+  padding: 7px;
+  background: #fff5dc;
+  color: #795b19;
   font-size: 10px;
   font-weight: 700;
   text-align: center;
 }
 
 .receipt-content {
-  padding: 35px 22px 30px;
+  padding: 30px 19px;
 }
 
 .big-amount {
-  margin-bottom: 62px;
+  margin-bottom: 55px;
   color: #333;
-  font-size: clamp(32px, 7.7vw, 55px);
-  line-height: 1.2;
+  font-size: clamp(30px, 7.5vw, 52px);
   text-align: center;
   overflow-wrap: anywhere;
 }
@@ -478,19 +445,18 @@ button {
 .receipt-details {
   display: flex;
   flex-direction: column;
-  gap: 23px;
+  gap: 22px;
 }
 
 .detail-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   gap: 10px;
-  font-size: clamp(11px, 2.8vw, 18px);
+  font-size: clamp(11px, 2.8vw, 17px);
   line-height: 1.45;
 }
 
-.detail-row > span {
+.detail-row span {
   color: #999;
 }
 
@@ -501,85 +467,89 @@ button {
 }
 
 .perforation {
-  height: 30px;
+  height: 27px;
   border-bottom: 3px dashed #245c89;
 }
 
 .receipt-footer {
   display: grid;
-  grid-template-columns: 0.7fr 0.8fr 1fr;
+  grid-template-columns: 0.7fr 1fr 0.8fr;
   align-items: center;
-  gap: 12px;
-  min-height: 175px;
-  padding: 22px 16px;
+  gap: 8px;
+  min-height: 150px;
+  padding: 18px 12px;
 }
 
 .receipt-mark {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
-  border-radius: 12px;
+  min-height: 70px;
+  border-radius: 10px;
   background: var(--blue);
   color: white;
-  font-size: 25px;
+  font-size: 23px;
   font-weight: 700;
 }
 
+/* QR SIZE: 100 x 100 px */
+
 .qr-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-width: 0;
-  text-align: center;
 }
 
-.qr-area img,
-.qr-fallback {
-  display: block;
-  width: 100%;
-  max-width: 110px;
-  aspect-ratio: 1;
-  margin: 0 auto;
-  object-fit: contain;
-}
-
-.qr-fallback {
+#qrcode {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px dashed #aaa;
-  color: #777;
-  font-size: 11px;
+  width: 100px;
+  height: 100px;
+  padding: 0;
+  background: white;
+}
+
+#qrcode img,
+#qrcode canvas {
+  display: block;
+  width: 100px !important;
+  height: 100px !important;
+  max-width: 100%;
 }
 
 .qr-area small {
-  display: block;
-  margin-top: 7px;
+  margin-top: 6px;
   color: #607d8b;
   font-size: 9px;
+  text-align: center;
 }
 
 .thank-you {
-  font-size: clamp(11px, 2.5vw, 17px);
+  font-size: clamp(11px, 2.5vw, 16px);
   text-align: center;
   overflow-wrap: anywhere;
 }
 
 .disclaimer {
-  margin: 25px 0 18px;
+  margin: 22px 0;
   color: white;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .receipt-action {
   display: block;
   width: 100%;
-  min-height: 48px;
+  min-height: 47px;
   margin-top: 12px;
   border: 1px solid white;
   border-radius: 8px;
   background: white;
   color: var(--blue);
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .secondary-action {
@@ -587,57 +557,54 @@ button {
   color: white;
 }
 
-/* Smaller mobile screens */
+/* MOBILE */
 
 @media (max-width: 380px) {
-  .form-card {
-    margin-right: 14px;
-    margin-left: 14px;
-    padding-right: 17px;
-    padding-left: 17px;
+  .page1-card {
+    margin: 16px;
+    padding: 20px;
   }
 
   .transfer-card {
-    margin: 0;
-    padding: 23px 16px 25px;
+    padding: 22px 15px;
   }
 
   .note-options {
-    gap: 6px;
+    gap: 5px;
   }
 
   .note-chip {
-    font-size: 12px;
-  }
-
-  .warnings {
-    font-size: 14px;
+    font-size: 11px;
   }
 
   .receipt-content {
-    padding-right: 13px;
-    padding-left: 13px;
+    padding: 25px 12px;
   }
 
   .receipt-footer {
-    gap: 7px;
-    padding-right: 10px;
-    padding-left: 10px;
+    grid-template-columns: 0.6fr 1fr 0.7fr;
+    gap: 5px;
+    padding: 15px 7px;
+  }
+
+  .receipt-mark {
+    font-size: 18px;
+  }
+
+  .thank-you {
+    font-size: 11px;
   }
 }
 
-/* Printing */
+/* PRINT */
 
 @media print {
   @page {
-    size: auto;
     margin: 8mm;
   }
 
   body,
-  .app,
-  .page {
-    min-height: 0;
+  .app {
     background: white;
   }
 

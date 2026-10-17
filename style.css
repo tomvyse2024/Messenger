@@ -4,9 +4,10 @@
 
 :root {
   --blue: #0756a5;
-  --screen: #f5f5f5;
-  --muted-red: #bd6b6b;
-  --text: #171717;
+  --light-blue: #9bbadd;
+  --bg: #f5f5f5;
+  --muted: #999;
+  --red: #bd6b6b;
 }
 
 html,
@@ -16,11 +17,10 @@ body {
 }
 
 body {
-  background: var(--screen);
-  color: var(--text);
   font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: #111;
   font-size: 16px;
-  line-height: 1.4;
 }
 
 button,
@@ -29,7 +29,12 @@ input {
 }
 
 button {
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 .app {
@@ -37,56 +42,107 @@ button {
   max-width: 576px;
   min-height: 100vh;
   margin: 0 auto;
-  background: #fff;
 }
 
-.screen[hidden] {
-  display: none !important;
-}
-
-/* Transfer screen */
-
-.transfer-screen {
+.page {
   min-height: 100vh;
-  background: #f5f5f5;
+  background: var(--bg);
 }
 
 .topbar {
   display: flex;
   align-items: center;
+  gap: 16px;
   height: 124px;
-  padding: 55px 22px 0;
-  gap: 17px;
+  padding: 45px 22px 0;
+  background: var(--blue);
+  color: white;
+  font-size: 23px;
 }
 
 .back-arrow {
-  width: 39px;
-  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
   padding: 0;
   border: 0;
   background: transparent;
-  color: #111;
-  font-family: Arial, sans-serif;
-  font-size: 47px;
-  line-height: 32px;
+  color: inherit;
+  font-size: 42px;
   font-weight: 300;
-  cursor: pointer;
-  transform: translateY(-2px);
+  line-height: 1;
 }
 
-.topbar-title {
-  font-size: 23px;
+button.back-arrow {
+  height: 42px;
+}
+
+.history {
+  margin-left: auto;
+  font-size: 20px;
+}
+
+.form-card {
+  position: relative;
+  z-index: 1;
+  margin: -1px 0 0;
+  padding: 24px 22px 28px;
+  border-radius: 20px 20px 0 0;
+  background: white;
+}
+
+.first-card {
+  margin: 21px 22px 0;
+  padding: 25px 26px 34px;
+  border-radius: 18px;
+  box-shadow: 0 2px 5px #00000012;
+}
+
+.first-card label,
+.form-card > label {
+  display: block;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 16px;
+}
+
+.first-card input {
+  display: block;
+  width: 100%;
+  height: 58px;
+  margin-bottom: 25px;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+  border-radius: 0;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+}
+
+.first-card input:focus,
+.line-input:focus {
+  border-bottom-color: var(--blue);
+}
+
+input::placeholder {
+  color: #c1c1c1;
+}
+
+.main-button {
+  display: block;
+  width: 100%;
+  min-height: 65px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--light-blue);
+  color: white;
+  font-size: 24px;
   font-weight: 400;
 }
 
-.history-button {
-  margin-left: auto;
-  padding: 8px 0 8px 10px;
-  border: 0;
-  background: transparent;
-  font-size: 20px;
-  color: #111;
-  cursor: pointer;
+.main-button:active {
+  background: #80a8d3;
 }
 
 .recipient {
@@ -99,7 +155,7 @@ button {
 
 .avatar {
   position: relative;
-  flex: 0 0 45px;
+  flex-shrink: 0;
   width: 45px;
   height: 45px;
   overflow: hidden;
@@ -110,49 +166,38 @@ button {
 .avatar::before {
   content: "";
   position: absolute;
-  width: 17px;
-  height: 17px;
   top: 7px;
   left: 14px;
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
-  background: #fff;
+  background: white;
 }
 
 .avatar span {
   position: absolute;
-  width: 29px;
-  height: 17px;
   bottom: 4px;
   left: 8px;
+  width: 29px;
+  height: 17px;
   border-radius: 18px 18px 10px 10px;
-  background: #fff;
+  background: white;
 }
 
 .recipient-name {
-  min-width: 0;
-  font-size: 20px;
-  line-height: 1.35;
+  font-size: 19px;
   overflow-wrap: anywhere;
 }
 
-.transfer-card {
-  min-height: 590px;
-  padding: 22px 22px 28px;
-  border-radius: 20px 20px 0 0;
-  background: #fff;
-}
-
-.field-label {
-  display: block;
-  margin: 0 0 13px;
-  font-size: 16px;
-  font-weight: 400;
+.recipient-phone {
+  margin-top: 3px;
+  color: #777;
+  font-size: 14px;
 }
 
 .line-input {
   display: block;
   width: 100%;
-  min-width: 0;
   height: 65px;
   padding: 0;
   border: 0;
@@ -160,37 +205,20 @@ button {
   border-radius: 0;
   outline: none;
   background: transparent;
-  color: #222;
   font-size: 18px;
 }
 
-.line-input::placeholder {
-  color: #b8b8b8;
-  opacity: 1;
-}
-
-.line-input:focus {
-  border-bottom-color: #9bb8d6;
-}
-
-.amount-input {
-  margin-bottom: 24px;
-}
-
-.notes-label {
-  margin-bottom: 9px;
-}
-
-.notes-input {
-  height: 62px;
-  margin-bottom: 12px;
+.form-card > .notes-label {
+  margin-top: 24px;
+  margin-bottom: 8px;
+  color: #111;
 }
 
 .note-options {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 11px;
-  margin: 0 0 36px;
+  gap: 10px;
+  margin: 12px 0 36px;
 }
 
 .note-chip {
@@ -198,7 +226,7 @@ button {
   align-items: center;
   justify-content: center;
   min-height: 49px;
-  padding: 6px 4px;
+  padding: 5px 3px;
   border: 1px solid transparent;
   border-radius: 9px;
   background: #f4f4f4;
@@ -206,142 +234,148 @@ button {
   font-size: 14px;
   line-height: 1.25;
   text-align: center;
-  cursor: pointer;
 }
 
 .note-chip.selected {
-  border-color: #9bbde0;
-  background: #eaf2fb;
-}
-
-.transfer-button {
-  display: block;
-  width: 100%;
-  height: 66px;
-  border: 0;
-  border-radius: 10px;
-  background: #9ab9dc;
-  color: #fff;
-  font-size: 24px;
-  font-weight: 400;
-  cursor: pointer;
-}
-
-.transfer-button:active {
-  background: #7fa8d4;
+  border-color: #8eb2d8;
+  background: #e7f0fa;
 }
 
 .warnings {
-  padding: 21px 5px 0;
-  color: var(--muted-red);
-  font-size: 18px;
+  padding: 20px 4px 0;
+  color: var(--red);
+  font-size: 17px;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .warnings p {
-  margin: 0 0 6px;
+  margin: 0 0 7px;
 }
 
-/* E-Receipt screen */
+/* Password dialog */
+
+.modal {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  background: #0006;
+}
+
+.password-box {
+  width: 100%;
+  max-width: 360px;
+  padding: 25px 22px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 8px 35px #0003;
+}
+
+.password-box h2 {
+  margin: 0 0 9px;
+  font-size: 22px;
+}
+
+.password-box p {
+  color: #777;
+  font-size: 14px;
+}
+
+.password-box input {
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline-color: var(--blue);
+  letter-spacing: 4px;
+}
+
+.password-box .error-message {
+  min-height: 18px;
+  margin: 7px 0;
+  color: #c62828;
+  font-size: 12px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-buttons button {
+  flex: 1;
+  min-height: 45px;
+  border: 0;
+  border-radius: 8px;
+}
+
+.cancel-button {
+  background: #eee;
+}
+
+.confirm-button {
+  background: var(--blue);
+  color: white;
+}
+
+/* Receipt */
 
 .receipt-screen {
   min-height: 100vh;
-  padding: 5.7vh 4.3% 28px;
+  padding: 5.7vh 4.3% 25px;
   background: var(--blue);
 }
 
 .receipt-card {
   overflow: hidden;
   border-radius: 6px;
-  background: #fff;
+  background: white;
 }
 
-.receipt-top {
+.receipt-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   min-height: 108px;
-  padding: 18px 25px;
-  background: #f1f1f1;
-  gap: 12px;
+  padding: 18px 22px;
+  background: #f0f0f0;
 }
 
 .bank-brand {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 5px;
   color: #d51e32;
 }
 
 .bank-symbol {
-  position: relative;
-  width: 34px;
-  height: 38px;
-  flex: 0 0 34px;
-}
-
-.bank-symbol::before,
-.bank-symbol::after,
-.bank-symbol span {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 16px solid transparent;
-  border-right: 16px solid transparent;
-}
-
-.bank-symbol::before {
-  top: 0;
-  border-bottom: 28px solid #d71935;
-}
-
-.bank-symbol::after {
-  top: 7px;
-  left: 4px;
-  border-left-width: 12px;
-  border-right-width: 12px;
-  border-bottom: 21px solid #f1f1f1;
-}
-
-.bank-symbol span {
-  top: 13px;
-  left: 2px;
-  border-left-width: 15px;
-  border-right-width: 15px;
-  border-bottom: 25px solid #0756a5;
-  transform: scale(.75);
-  transform-origin: top center;
-}
-
-.bank-symbol i {
-  position: absolute;
-  left: 8px;
-  bottom: 1px;
-  width: 19px;
-  height: 3px;
-  background: #0756a5;
+  color: var(--blue);
+  font-size: 37px;
+  font-weight: bold;
 }
 
 .bank-name {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 800;
-  line-height: 1.05;
   white-space: nowrap;
 }
 
 .bank-name small {
   display: block;
-  margin-top: 4px;
+  margin-top: 3px;
   font-size: 5px;
-  letter-spacing: 1.5px;
-  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .receipt-title {
-  font-size: clamp(22px, 4.5vw, 35px);
+  font-size: clamp(22px, 4.5vw, 34px);
   white-space: nowrap;
-  color: #111;
 }
 
 .receipt-content {
@@ -349,20 +383,19 @@ button {
 }
 
 .big-amount {
-  margin: 0 0 80px;
+  margin-bottom: 78px;
   color: #333;
-  font-size: clamp(34px, 8vw, 74px);
+  font-size: clamp(34px, 8vw, 72px);
   line-height: 1.2;
   text-align: center;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .big-amount small {
-  font-size: .36em;
-  white-space: nowrap;
+  font-size: 0.36em;
 }
 
-.details {
+.receipt-details {
   display: flex;
   flex-direction: column;
   gap: 23px;
@@ -372,164 +405,112 @@ button {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
   align-items: start;
-  gap: 12px;
-  font-size: clamp(13px, 2.7vw, 25px);
-  line-height: 1.35;
+  gap: 10px;
+  font-size: clamp(12px, 2.7vw, 24px);
+  line-height: 1.4;
 }
 
-.detail-row span {
-  color: #9b9b9b;
+.detail-row > span {
+  color: #999;
 }
 
 .detail-row strong {
-  color: #080808;
   font-weight: 400;
   text-align: right;
   overflow-wrap: anywhere;
 }
 
 .perforation {
-  position: relative;
   height: 36px;
-  margin: 0;
   border-bottom: 3px dashed #24608c;
 }
 
-.perforation span {
-  position: absolute;
-  bottom: -18px;
-  left: -16px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--blue);
-}
-
-.perforation span:last-child {
-  left: auto;
-  right: -16px;
-}
-
-.receipt-bottom {
+.receipt-footer {
   display: grid;
-  grid-template-columns: 150px 150px minmax(0, 1fr);
+  grid-template-columns: 0.8fr 0.8fr 1fr;
   align-items: center;
-  gap: 18px;
-  min-height: 260px;
-  padding: 35px 24px 30px;
+  gap: 13px;
+  min-height: 205px;
+  padding: 30px 20px;
 }
 
-.kbzpay-mark {
+.pay-logo {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-height: 150px;
-  padding: 12px 6px;
-  border-radius: 17px;
-  background: #0756a5;
+  min-height: 110px;
+  border-radius: 15px;
+  background: var(--blue);
   color: white;
-  font-size: 30px;
-  line-height: 1.05;
+  font-size: 27px;
   text-align: center;
+  line-height: 1.15;
 }
 
-.kbzpay-mark span {
-  font-size: 32px;
+.pay-logo span {
   font-weight: 300;
 }
 
-.kbzpay-mark small {
-  position: absolute;
-  transform: translateY(100px);
-  width: 140px;
-  color: #55758d;
-  font-size: 10px;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-
-.qr-wrap {
+.qr-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 150px;
-  padding-left: 16px;
-  border-left: 2px solid #ddd;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 5px solid #eee;
+  background: repeating-conic-gradient(#111 0% 25%, white 0% 50%) 0 0 / 12px 12px;
+  color: transparent;
+  font-size: 1px;
 }
 
-.qr-placeholder {
-  width: 100px;
-  height: 100px;
-  border: 5px solid #fff;
-  outline: 1px solid #ddd;
-  background-color: #fff;
-  background-image:
-    linear-gradient(90deg, #111 12%, transparent 12% 24%, #111 24% 31%, transparent 31% 45%, #111 45% 53%, transparent 53% 64%, #111 64% 72%, transparent 72% 82%, #111 82%),
-    linear-gradient(#111 12%, transparent 12% 22%, #111 22% 30%, transparent 30% 41%, #111 41% 49%, transparent 49% 62%, #111 62% 69%, transparent 69% 80%, #111 80%);
-  background-size: 19px 19px, 17px 17px;
-  background-blend-mode: multiply;
-}
-
-.thanks {
-  font-size: clamp(12px, 2.7vw, 24px);
-  line-height: 1.3;
+.thank-you {
+  font-size: clamp(12px, 2.5vw, 21px);
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
-.receipt-disclaimer {
-  margin: 44px 0 20px;
-  color: #fff;
-  font-size: clamp(13px, 2.5vw, 23px);
-  line-height: 1.4;
+.disclaimer {
+  margin: 30px 0 20px;
+  color: white;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-.new-transfer {
+.print-button {
   display: block;
   width: 100%;
   min-height: 48px;
-  margin: 18px auto 0;
-  border: 1px solid rgba(255,255,255,.75);
+  margin-top: 12px;
+  border: 1px solid white;
   border-radius: 8px;
   background: transparent;
   color: white;
   font-size: 16px;
-  cursor: pointer;
 }
 
 @media (max-width: 430px) {
-  .topbar {
-    height: 122px;
-    padding: 52px 22px 0;
+  .first-card {
+    margin-right: 22px;
+    margin-left: 22px;
+    padding: 24px 26px 34px;
   }
 
-  .transfer-card {
+  .form-card:not(.first-card) {
     padding-right: 22px;
     padding-left: 22px;
   }
 
-  .recipient-name {
-    font-size: 18px;
-  }
-
-  .receipt-screen {
-    padding: 5.7vh 4.3% 24px;
-  }
-
-  .receipt-top {
+  .receipt-header {
     min-height: 78px;
-    padding: 14px 15px;
+    padding: 14px 13px;
   }
 
   .bank-name {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .bank-symbol {
-    transform: scale(.82);
-    transform-origin: left center;
-    margin-right: -5px;
+    font-size: 29px;
   }
 
   .receipt-content {
@@ -537,76 +518,51 @@ button {
   }
 
   .big-amount {
-    margin-bottom: 70px;
-    font-size: clamp(31px, 8vw, 46px);
+    margin-bottom: 65px;
+    font-size: clamp(29px, 7.6vw, 42px);
   }
 
-  .details {
+  .receipt-details {
     gap: 22px;
   }
 
   .detail-row {
-    grid-template-columns: minmax(0, .95fr) minmax(0, 1.2fr);
-    gap: 9px;
-    font-size: clamp(12px, 3.15vw, 16px);
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.2fr);
+    font-size: clamp(11px, 3.1vw, 15px);
   }
 
-  .receipt-bottom {
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding: 30px 14px 28px;
+  .receipt-footer {
+    grid-template-columns: 0.8fr 0.8fr;
+    padding: 25px 13px;
   }
 
-  .kbzpay-mark {
-    min-height: 120px;
-    font-size: 25px;
+  .pay-logo {
+    font-size: 23px;
   }
 
-  .kbzpay-mark span {
-    font-size: 27px;
-  }
-
-  .kbzpay-mark small {
-    transform: translateY(83px);
-    width: 120px;
-    font-size: 9px;
-  }
-
-  .qr-wrap {
-    min-height: 120px;
-    padding-left: 10px;
-  }
-
-  .qr-placeholder {
-    width: 82px;
-    height: 82px;
-    background-size: 15px 15px, 14px 14px;
-  }
-
-  .thanks {
+  .thank-you {
     grid-column: 1 / -1;
-    padding-top: 15px;
+    padding-top: 8px;
     font-size: 16px;
-  }
-
-  .receipt-disclaimer {
-    margin-top: 32px;
-    font-size: 14px;
   }
 }
 
 @media print {
   body,
-  .app {
+  .app,
+  .page {
     background: white;
   }
 
-  .transfer-screen,
-  .new-transfer {
+  #page1,
+  #page2,
+  .print-button,
+  #newTransferButton {
     display: none !important;
   }
 
-  .receipt-screen {
+  #page3,
+  #page3 .receipt-screen {
     display: block !important;
     padding: 0;
     background: #0756a5 !important;
@@ -614,7 +570,7 @@ button {
     print-color-adjust: exact;
   }
 
-  .receipt-disclaimer {
-    color: #fff !important;
+  .disclaimer {
+    color: white !important;
   }
 }

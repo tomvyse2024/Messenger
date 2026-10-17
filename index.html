@@ -3,183 +3,375 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f5f5f5">
+  <meta name="theme-color" content="#0756a5">
   <title>Transfer</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app">
-    <section id="transferPage" class="screen transfer-screen">
-      <header class="topbar">
-        <button class="back-arrow" id="backArrow" type="button" aria-label="Back">‹</button>
-        <div class="topbar-title">Transfer</div>
-        <button class="history-button" type="button" id="historyButton">History</button>
-      </header>
 
-      <div class="recipient">
-        <div class="avatar" aria-hidden="true"><span></span></div>
-        <div class="recipient-name" id="recipientDisplay">MA TIN NILAR PHYO(*******4635)</div>
+<main class="app">
+
+  <!-- PAGE 1: CUSTOMER INFORMATION -->
+  <section id="page1" class="page active">
+    <header class="topbar">
+      <span class="back-arrow">‹</span>
+      <span>Transfer</span>
+      <span class="history">History</span>
+    </header>
+
+    <div class="form-card first-card">
+      <label for="customerName">Name</label>
+      <input id="customerName" type="text"
+             placeholder="Please enter name" required>
+
+      <label for="phoneNumber">Phone Number</label>
+      <input id="phoneNumber" type="tel"
+             inputmode="tel"
+             placeholder="Please enter phone number" required>
+
+      <button class="main-button" id="nextButton" type="button">
+        Next
+      </button>
+    </div>
+  </section>
+
+  <!-- PAGE 2: TRANSFER DETAILS -->
+  <section id="page2" class="page" hidden>
+    <header class="topbar">
+      <button class="back-arrow" id="backToPage1" type="button">‹</button>
+      <span>Transfer</span>
+      <span class="history">History</span>
+    </header>
+
+    <div class="recipient">
+      <div class="avatar"><span></span></div>
+      <div>
+        <div class="recipient-name" id="displayName"></div>
+        <div class="recipient-phone" id="displayPhone"></div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <label for="amount">Amount (Ks)</label>
+      <input class="line-input" id="amount"
+             type="number" min="1" step="1"
+             inputmode="decimal"
+             placeholder="Enter Amount">
+
+      <label class="notes-label" for="notes">Add Notes (Mandatory)</label>
+      <input class="line-input" id="notes"
+             type="text" placeholder="Please add Notes"
+             maxlength="100">
+
+      <div class="note-options">
+        <button type="button" class="note-chip" data-note="Salary">
+          Salary
+        </button>
+        <button type="button" class="note-chip" data-note="Payment">
+          Payment
+        </button>
+        <button type="button" class="note-chip" data-note="Bill">
+          Bill
+        </button>
+        <button type="button" class="note-chip"
+                data-note="Family & Friends">
+          Family &amp;<br>Friends
+        </button>
       </div>
 
-      <form id="transferForm" class="transfer-card">
-        <label class="field-label" for="amount">Amount (Ks)</label>
-        <input id="amount" class="line-input amount-input" type="number" min="1" step="1" inputmode="decimal" placeholder="Enter Amount" required>
+      <button class="main-button" id="transferButton" type="button">
+        Transfer
+      </button>
 
-        <label class="field-label notes-label" for="notes">Add Notes (Mandatory)</label>
-        <input id="notes" class="line-input notes-input" type="text" placeholder="Please add Notes" maxlength="100" required>
+      <div class="warnings">
+        <p>* Always check the recipient's phone number and the amount to avoid incorrect transactions and fraud.</p>
+        <p>* Please make sure to add notes to transfer.</p>
+      </div>
+    </div>
+  </section>
 
-        <div class="note-options" aria-label="Note suggestions">
-          <button type="button" class="note-chip" data-note="Salary">Salary</button>
-          <button type="button" class="note-chip" data-note="Payment">Payment</button>
-          <button type="button" class="note-chip" data-note="Bill">Bill</button>
-          <button type="button" class="note-chip" data-note="Family & Friends">Family &amp;<br>Friends</button>
-        </div>
+  <!-- PASSWORD DIALOG -->
+  <div class="modal" id="passwordModal" hidden>
+    <div class="password-box">
+      <h2>Enter Password</h2>
+      <p>Please enter your password to continue.</p>
 
-        <button class="transfer-button" type="submit">Transfer</button>
+      <input id="passwordInput" type="password"
+             inputmode="numeric" maxlength="6"
+             placeholder="Enter password">
 
-        <div class="warnings">
-          <p>* Always check the recipient's phone number and the amount to avoid incorrect transactions and fraud.</p>
-          <p>* Please make sure to add notes to transfer.</p>
-        </div>
-      </form>
-    </section>
+      <p class="error-message" id="passwordError"></p>
 
-    <section id="receiptPage" class="screen receipt-screen" hidden>
+      <div class="modal-buttons">
+        <button type="button" class="cancel-button"
+                id="cancelPassword">Cancel</button>
+        <button type="button" class="confirm-button"
+                id="confirmPassword">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: RECEIPT -->
+  <section id="page3" class="page" hidden>
+    <div class="receipt-screen">
       <div class="receipt-card">
-        <header class="receipt-top">
-          <div class="bank-brand" aria-label="KBZ Bank">
-            <div class="bank-symbol"><span></span><i></i></div>
-            <div class="bank-name">KBZ BANK<small>STRENGTH OF MYANMAR</small></div>
+        <header class="receipt-header">
+          <div class="bank-brand">
+            <div class="bank-symbol">△</div>
+            <div class="bank-name">
+              KBZ BANK
+              <small>STRENGTH OF MYANMAR</small>
+            </div>
           </div>
           <div class="receipt-title">E-Receipt</div>
         </header>
 
         <div class="receipt-content">
-          <div class="big-amount"><span id="receiptAmount">-0.00</span> <small>Ks</small></div>
+          <div class="big-amount">
+            <span id="receiptBigAmount">-0.00</span>
+            <small>Ks</small>
+          </div>
 
-          <div class="details">
-            <div class="detail-row"><span>Transaction Time</span><strong id="receiptTime"></strong></div>
-            <div class="detail-row"><span>Transaction No</span><strong id="receiptNumber"></strong></div>
-            <div class="detail-row"><span>Transaction Type</span><strong>Transfer</strong></div>
-            <div class="detail-row"><span>Transfer To</span><strong id="receiptRecipient"></strong></div>
-            <div class="detail-row"><span>Amount</span><strong id="receiptAmountRow"></strong></div>
-            <div class="detail-row"><span>Notes</span><strong id="receiptNotes"></strong></div>
+          <div class="receipt-details">
+            <div class="detail-row">
+              <span>Transaction Time</span>
+              <strong id="receiptTime"></strong>
+            </div>
+
+            <div class="detail-row">
+              <span>Transaction No</span>
+              <strong id="receiptNumber"></strong>
+            </div>
+
+            <div class="detail-row">
+              <span>Transaction Type</span>
+              <strong>Transfer</strong>
+            </div>
+
+            <div class="detail-row">
+              <span>Transfer To</span>
+              <strong id="receiptName"></strong>
+            </div>
+
+            <div class="detail-row">
+              <span>Phone Number</span>
+              <strong id="receiptPhone"></strong>
+            </div>
+
+            <div class="detail-row">
+              <span>Amount</span>
+              <strong id="receiptAmount"></strong>
+            </div>
+
+            <div class="detail-row">
+              <span>Notes</span>
+              <strong id="receiptNotes"></strong>
+            </div>
           </div>
         </div>
 
-        <div class="perforation"><span></span><span></span></div>
+        <div class="perforation"></div>
 
-        <div class="receipt-bottom">
-          <div class="kbzpay-mark">KBZ<span>Pay</span><small>Scan to verify payment</small></div>
-          <div class="qr-wrap">
-            <div class="qr-placeholder" aria-label="QR code placeholder"></div>
+        <div class="receipt-footer">
+          <div class="pay-logo">KBZ<br><span>Pay</span></div>
+          <div class="qr-placeholder" aria-label="Demo QR placeholder">
+            DEMO
           </div>
-          <div class="thanks">Thank you for using KBZPay!</div>
+          <div class="thank-you">
+            Thank you!
+          </div>
         </div>
       </div>
 
-      <p class="receipt-disclaimer">The e-receipt only means you already paid for the merchant. You need to confirm the final transaction status with merchant.</p>
-      <button type="button" class="new-transfer" id="newTransfer">New Transfer</button>
-    </section>
-  </main>
+      <p class="disclaimer">
+        Demo receipt only. This page does not confirm an actual bank
+        transfer or payment. Please verify transactions through your bank.
+      </p>
 
-  <script>
-    const transferForm = document.getElementById("transferForm");
-    const amountInput = document.getElementById("amount");
-    const notesInput = document.getElementById("notes");
+      <button class="main-button" id="newTransferButton" type="button">
+        New Transfer
+      </button>
 
-    document.querySelectorAll(".note-chip").forEach(button => {
-      button.addEventListener("click", () => {
-        notesInput.value = button.dataset.note;
-        notesInput.focus();
-        document.querySelectorAll(".note-chip").forEach(chip => chip.classList.remove("selected"));
-        button.classList.add("selected");
-      });
+      <button class="print-button" id="printButton" type="button">
+        Print Receipt
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const page1 = document.getElementById("page1");
+  const page2 = document.getElementById("page2");
+  const page3 = document.getElementById("page3");
+
+  const nameInput = document.getElementById("customerName");
+  const phoneInput = document.getElementById("phoneNumber");
+  const amountInput = document.getElementById("amount");
+  const notesInput = document.getElementById("notes");
+
+  const passwordModal = document.getElementById("passwordModal");
+  const passwordInput = document.getElementById("passwordInput");
+  const passwordError = document.getElementById("passwordError");
+
+  function showPage(page) {
+    [page1, page2, page3].forEach(item => {
+      item.hidden = item !== page;
+      item.classList.toggle("active", item === page);
     });
 
-    document.getElementById("backArrow").addEventListener("click", () => {
-      if (!document.getElementById("receiptPage").hidden) {
-        showTransfer();
-      } else {
-        amountInput.focus();
-      }
-    });
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
 
-    document.getElementById("historyButton").addEventListener("click", () => {
-      alert("History is a visual placeholder in this demo.");
-    });
+  // PAGE 1 -> PAGE 2
+  document.getElementById("nextButton").addEventListener("click", () => {
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
 
-    transferForm.addEventListener("submit", event => {
-      event.preventDefault();
+    if (!name) {
+      alert("Please enter customer name.");
+      nameInput.focus();
+      return;
+    }
 
-      const amount = Number(amountInput.value);
-      const notes = notesInput.value.trim();
+    if (!phone || !/^[0-9+\-\s()]{6,20}$/.test(phone)) {
+      alert("Please enter a valid phone number.");
+      phoneInput.focus();
+      return;
+    }
 
-      if (!Number.isFinite(amount) || amount <= 0) {
-        alert("Please enter a valid amount.");
-        amountInput.focus();
-        return;
-      }
+    document.getElementById("displayName").textContent = name;
+    document.getElementById("displayPhone").textContent = phone;
 
-      if (!notes) {
-        alert("Please add notes to transfer.");
-        notesInput.focus();
-        return;
-      }
+    showPage(page2);
+  });
 
-      const formatted = amount.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+  // PAGE 2 -> PAGE 1
+  document.getElementById("backToPage1").addEventListener("click", () => {
+    showPage(page1);
+  });
 
-      document.getElementById("receiptAmount").textContent = "-" + formatted;
-      document.getElementById("receiptAmountRow").textContent = "-" + formatted + " Ks";
-      document.getElementById("receiptNotes").textContent = notes;
-
-      document.getElementById("receiptTime").textContent =
-        new Date().toLocaleString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false
-        }).replace(",", "");
-
-      document.getElementById("receiptNumber").textContent = makeTransactionNumber();
-      document.getElementById("receiptRecipient").textContent =
-        document.getElementById("recipientDisplay").textContent;
-
-      document.getElementById("transferPage").hidden = true;
-      document.getElementById("receiptPage").hidden = false;
-      window.scrollTo({ top: 0, behavior: "instant" });
-    });
-
-    document.getElementById("newTransfer").addEventListener("click", showTransfer);
-
-    function showTransfer() {
-      document.getElementById("receiptPage").hidden = true;
-      document.getElementById("transferPage").hidden = false;
-      transferForm.reset();
+  // QUICK NOTE BUTTONS
+  document.querySelectorAll(".note-chip").forEach(button => {
+    button.addEventListener("click", () => {
+      notesInput.value = button.dataset.note;
 
       document.querySelectorAll(".note-chip").forEach(chip => {
         chip.classList.remove("selected");
       });
 
-      window.scrollTo({ top: 0, behavior: "instant" });
+      button.classList.add("selected");
+    });
+  });
+
+  // TRANSFER -> PASSWORD
+  document.getElementById("transferButton").addEventListener("click", () => {
+    const amount = Number(amountInput.value);
+    const notes = notesInput.value.trim();
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      alert("Please enter a valid amount.");
+      amountInput.focus();
+      return;
     }
 
-    function makeTransactionNumber() {
-      const digits = "0123456789";
-      let result = "";
-
-      for (let i = 0; i < 19; i++) {
-        result += digits[Math.floor(Math.random() * digits.length)];
-      }
-
-      return result;
+    if (!notes) {
+      alert("Please select or enter notes.");
+      notesInput.focus();
+      return;
     }
-  </script>
+
+    passwordInput.value = "";
+    passwordError.textContent = "";
+    passwordModal.hidden = false;
+    passwordInput.focus();
+  });
+
+  // CANCEL PASSWORD
+  document.getElementById("cancelPassword").addEventListener("click", () => {
+    passwordModal.hidden = true;
+    passwordInput.value = "";
+  });
+
+  // PASSWORD CHECK
+  function checkPassword() {
+    if (passwordInput.value !== "301120") {
+      passwordError.textContent = "Incorrect password. Please try again.";
+      passwordInput.value = "";
+      passwordInput.focus();
+      return;
+    }
+
+    passwordModal.hidden = true;
+    createReceipt();
+    showPage(page3);
+  }
+
+  document.getElementById("confirmPassword").addEventListener("click", checkPassword);
+
+  passwordInput.addEventListener("keydown", event => {
+    if (event.key === "Enter") checkPassword();
+
+    if (event.key === "Escape") {
+      passwordModal.hidden = true;
+    }
+  });
+
+  // CREATE RECEIPT
+  function createReceipt() {
+    const amount = Number(amountInput.value);
+    const formatted = amount.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    document.getElementById("receiptBigAmount").textContent = "-" + formatted;
+    document.getElementById("receiptAmount").textContent = "-" + formatted + " Ks";
+
+    document.getElementById("receiptName").textContent =
+      nameInput.value.trim();
+
+    document.getElementById("receiptPhone").textContent =
+      phoneInput.value.trim();
+
+    document.getElementById("receiptNotes").textContent =
+      notesInput.value.trim();
+
+    document.getElementById("receiptTime").textContent =
+      new Date().toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).replace(",", "");
+
+    document.getElementById("receiptNumber").textContent =
+      "DEMO-" + Date.now().toString().slice(-12);
+  }
+
+  // NEW TRANSFER
+  document.getElementById("newTransferButton").addEventListener("click", () => {
+    nameInput.value = "";
+    phoneInput.value = "";
+    amountInput.value = "";
+    notesInput.value = "";
+
+    document.querySelectorAll(".note-chip").forEach(chip => {
+      chip.classList.remove("selected");
+    });
+
+    showPage(page1);
+    nameInput.focus();
+  });
+
+  // PRINT RECEIPT
+  document.getElementById("printButton").addEventListener("click", () => {
+    window.print();
+  });
+</script>
+
 </body>
 </html>

@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0756a5">
-  <title>Transfer</title>
+  <title>Cash Receive System</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,130 +13,189 @@
 <main class="app">
 
   <!-- PAGE 1: CUSTOMER INFORMATION -->
-  <section id="page1" class="page active">
+  <section class="page active" id="page1">
     <header class="topbar">
-      <span class="back-arrow">‹</span>
-      <span>Transfer</span>
-      <span class="history">History</span>
+      <span class="back-icon">←</span>
+      <span>Customer Information</span>
     </header>
 
     <div class="form-card first-card">
-      <label for="customerName">Name</label>
-      <input id="customerName" type="text"
-             placeholder="Please enter name" required>
+      <div class="section-title">Customer Details</div>
+      <p class="subtitle">Please enter customer information.</p>
 
-      <label for="phoneNumber">Phone Number</label>
-      <input id="phoneNumber" type="tel"
-             inputmode="tel"
-             placeholder="Please enter phone number" required>
+      <form id="customerForm">
+        <label for="customerName">Customer Name</label>
+        <input
+          id="customerName"
+          type="text"
+          placeholder="Enter customer name"
+          autocomplete="off"
+          required
+        >
 
-      <button class="main-button" id="nextButton" type="button">
-        Next
-      </button>
+        <label for="customerInfo">Phone Number / Address / Customer ID</label>
+        <input
+          id="customerInfo"
+          type="text"
+          placeholder="Enter phone, address or customer ID"
+          autocomplete="off"
+          required
+        >
+
+        <button class="primary-button" type="submit">
+          Next
+        </button>
+      </form>
+
+      <p class="warning">
+        Please check the customer information before continuing.
+      </p>
     </div>
   </section>
 
-  <!-- PAGE 2: TRANSFER DETAILS -->
-  <section id="page2" class="page" hidden>
+
+  <!-- PAGE 2: TRANSFER -->
+  <section class="page" id="page2">
     <header class="topbar">
-      <button class="back-arrow" id="backToPage1" type="button">‹</button>
+      <button class="back-icon" id="backToPage1" type="button">←</button>
       <span>Transfer</span>
       <span class="history">History</span>
     </header>
 
     <div class="recipient">
       <div class="avatar"><span></span></div>
-      <div>
+      <div class="recipient-info">
         <div class="recipient-name" id="displayName"></div>
-        <div class="recipient-phone" id="displayPhone"></div>
+        <div class="recipient-phone" id="displayInfo"></div>
       </div>
     </div>
 
-    <div class="form-card">
-      <label for="amount">Amount (Ks)</label>
-      <input class="line-input" id="amount"
-             type="number" min="1" step="1"
-             inputmode="decimal"
-             placeholder="Enter Amount">
+    <div class="form-card transfer-card">
+      <form id="transferForm">
 
-      <label class="notes-label" for="notes">Add Notes (Mandatory)</label>
-      <input class="line-input" id="notes"
-             type="text" placeholder="Please add Notes"
-             maxlength="100">
+        <label for="amount">Amount (Ks)</label>
+        <input
+          class="line-input"
+          id="amount"
+          type="number"
+          min="1"
+          step="1"
+          inputmode="decimal"
+          placeholder="Enter Amount"
+          required
+        >
 
-      <div class="note-options">
-        <button type="button" class="note-chip" data-note="Salary">
-          Salary
-        </button>
-        <button type="button" class="note-chip" data-note="Payment">
-          Payment
-        </button>
-        <button type="button" class="note-chip" data-note="Bill">
-          Bill
-        </button>
-        <button type="button" class="note-chip"
-                data-note="Family & Friends">
-          Family &amp;<br>Friends
-        </button>
-      </div>
+        <label class="notes-label" for="notes">Add Notes (Mandatory)</label>
+        <input
+          class="line-input"
+          id="notes"
+          type="text"
+          placeholder="Please add Notes"
+          autocomplete="off"
+          required
+        >
 
-      <button class="main-button" id="transferButton" type="button">
-        Transfer
-      </button>
+        <div class="note-options" aria-label="Payment type">
+
+          <button class="note-chip" type="button" data-type="Salary">
+            Salary
+          </button>
+
+          <button class="note-chip" type="button" data-type="Payment">
+            Payment
+          </button>
+
+          <button class="note-chip" type="button" data-type="Bill">
+            Bill
+          </button>
+
+          <button class="note-chip" type="button" data-type="Family & Friends">
+            Family &amp;<br>Friends
+          </button>
+
+        </div>
+
+        <input type="hidden" id="paymentType" value="">
+
+        <button class="primary-button transfer-button" type="submit">
+          Transfer
+        </button>
+      </form>
 
       <div class="warnings">
-        <p>* Always check the recipient's phone number and the amount to avoid incorrect transactions and fraud.</p>
-        <p>* Please make sure to add notes to transfer.</p>
+        <p>* Always check the recipient information and amount before continuing.</p>
+        <p>* Please make sure to add notes to the transfer.</p>
       </div>
     </div>
   </section>
 
+
   <!-- PASSWORD DIALOG -->
   <div class="modal" id="passwordModal" hidden>
-    <div class="password-box">
-      <h2>Enter Password</h2>
-      <p>Please enter your password to continue.</p>
+    <div class="password-box" role="dialog" aria-modal="true"
+         aria-labelledby="passwordTitle">
 
-      <input id="passwordInput" type="password"
-             inputmode="numeric" maxlength="6"
-             placeholder="Enter password">
+      <h2 id="passwordTitle">Enter Password</h2>
+      <p>Please enter your demo access password.</p>
 
-      <p class="error-message" id="passwordError"></p>
+      <form id="passwordForm">
+        <input
+          id="passwordInput"
+          type="password"
+          inputmode="numeric"
+          placeholder="Enter password"
+          autocomplete="off"
+          required
+        >
 
-      <div class="modal-buttons">
-        <button type="button" class="cancel-button"
-                id="cancelPassword">Cancel</button>
-        <button type="button" class="confirm-button"
-                id="confirmPassword">OK</button>
-      </div>
+        <p class="error-message" id="passwordError" aria-live="polite"></p>
+
+        <div class="modal-buttons">
+          <button class="cancel-button" id="cancelPassword" type="button">
+            Cancel
+          </button>
+          <button class="confirm-button" type="submit">
+            Confirm
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
+
   <!-- PAGE 3: RECEIPT -->
-  <section id="page3" class="page" hidden>
+  <section class="page" id="page3">
     <div class="receipt-screen">
+
       <div class="receipt-card">
+
         <header class="receipt-header">
-          <div class="bank-brand">
-            <div class="bank-symbol">△</div>
-            <div class="bank-name">
-              KBZ BANK
-              <small>STRENGTH OF MYANMAR</small>
+          <div class="brand">
+            <div class="brand-icon">CR</div>
+            <div class="brand-name">
+              CASH RECEIVE
+              <small>RECEIPT SYSTEM</small>
             </div>
           </div>
           <div class="receipt-title">E-Receipt</div>
         </header>
 
+        <div class="demo-label">
+          DEMO RECEIPT — NOT PAYMENT CONFIRMATION
+        </div>
+
         <div class="receipt-content">
+
           <div class="big-amount">
-            <span id="receiptBigAmount">-0.00</span>
+            <span id="receiptAmount">0</span>
             <small>Ks</small>
           </div>
 
           <div class="receipt-details">
+
             <div class="detail-row">
               <span>Transaction Time</span>
-              <strong id="receiptTime"></strong>
+              <strong id="receiptDate"></strong>
             </div>
 
             <div class="detail-row">
@@ -154,47 +214,63 @@
             </div>
 
             <div class="detail-row">
-              <span>Phone Number</span>
-              <strong id="receiptPhone"></strong>
+              <span>Phone / Address / ID</span>
+              <strong id="receiptInfo"></strong>
             </div>
 
             <div class="detail-row">
-              <span>Amount</span>
-              <strong id="receiptAmount"></strong>
+              <span>Payment Type</span>
+              <strong id="receiptType"></strong>
             </div>
 
             <div class="detail-row">
               <span>Notes</span>
               <strong id="receiptNotes"></strong>
             </div>
+
           </div>
         </div>
 
         <div class="perforation"></div>
 
         <div class="receipt-footer">
-          <div class="pay-logo">KBZ<br><span>Pay</span></div>
-          <div class="qr-placeholder" aria-label="Demo QR placeholder">
-            DEMO
+
+          <div class="receipt-mark">CR</div>
+
+          <div class="qr-area">
+            <!-- Put your own QR image at images/qr-code.png -->
+            <img
+              src="images/qr-code.png"
+              alt="QR code"
+              onerror="this.style.display='none';document.getElementById('qrFallback').hidden=false"
+            >
+            <div class="qr-fallback" id="qrFallback" hidden>
+              QR IMAGE
+            </div>
+            <small>QR image placeholder</small>
           </div>
+
           <div class="thank-you">
             Thank you!
           </div>
+
         </div>
       </div>
 
       <p class="disclaimer">
-        Demo receipt only. This page does not confirm an actual bank
-        transfer or payment. Please verify transactions through your bank.
+        This is a locally generated demo receipt. It does not verify or
+        complete a real bank transfer or payment.
       </p>
 
-      <button class="main-button" id="newTransferButton" type="button">
+      <button class="receipt-action" id="printButton" type="button">
+        Print Receipt
+      </button>
+
+      <button class="receipt-action secondary-action" id="newTransferButton"
+              type="button">
         New Transfer
       </button>
 
-      <button class="print-button" id="printButton" type="button">
-        Print Receipt
-      </button>
     </div>
   </section>
 
@@ -205,171 +281,155 @@
   const page2 = document.getElementById("page2");
   const page3 = document.getElementById("page3");
 
-  const nameInput = document.getElementById("customerName");
-  const phoneInput = document.getElementById("phoneNumber");
-  const amountInput = document.getElementById("amount");
-  const notesInput = document.getElementById("notes");
-
-  const passwordModal = document.getElementById("passwordModal");
-  const passwordInput = document.getElementById("passwordInput");
-  const passwordError = document.getElementById("passwordError");
-
   function showPage(page) {
     [page1, page2, page3].forEach(item => {
-      item.hidden = item !== page;
-      item.classList.toggle("active", item === page);
+      item.classList.remove("active");
     });
 
-    window.scrollTo({ top: 0, behavior: "auto" });
+    page.classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // PAGE 1 -> PAGE 2
-  document.getElementById("nextButton").addEventListener("click", () => {
-    const name = nameInput.value.trim();
-    const phone = phoneInput.value.trim();
+  const customerForm = document.getElementById("customerForm");
+  const transferForm = document.getElementById("transferForm");
+  const passwordForm = document.getElementById("passwordForm");
+  const passwordModal = document.getElementById("passwordModal");
 
-    if (!name) {
-      alert("Please enter customer name.");
-      nameInput.focus();
-      return;
-    }
+  const customerName = document.getElementById("customerName");
+  const customerInfo = document.getElementById("customerInfo");
+  const amountInput = document.getElementById("amount");
+  const notesInput = document.getElementById("notes");
+  const paymentType = document.getElementById("paymentType");
 
-    if (!phone || !/^[0-9+\-\s()]{6,20}$/.test(phone)) {
-      alert("Please enter a valid phone number.");
-      phoneInput.focus();
-      return;
-    }
+  let selectedType = "";
 
-    document.getElementById("displayName").textContent = name;
-    document.getElementById("displayPhone").textContent = phone;
+  // Page 1 -> Page 2
+  customerForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    document.getElementById("displayName").textContent =
+      customerName.value.trim();
+
+    document.getElementById("displayInfo").textContent =
+      customerInfo.value.trim();
 
     showPage(page2);
   });
 
-  // PAGE 2 -> PAGE 1
-  document.getElementById("backToPage1").addEventListener("click", () => {
-    showPage(page1);
-  });
-
-  // QUICK NOTE BUTTONS
+  // Highlight the selected payment type in blue
   document.querySelectorAll(".note-chip").forEach(button => {
-    button.addEventListener("click", () => {
-      notesInput.value = button.dataset.note;
-
+    button.addEventListener("click", function() {
       document.querySelectorAll(".note-chip").forEach(chip => {
         chip.classList.remove("selected");
+        chip.setAttribute("aria-pressed", "false");
       });
 
-      button.classList.add("selected");
+      this.classList.add("selected");
+      this.setAttribute("aria-pressed", "true");
+
+      selectedType = this.dataset.type;
+      paymentType.value = selectedType;
+
+      // Automatically fill notes with the selected type.
+      notesInput.value = selectedType;
     });
   });
 
-  // TRANSFER -> PASSWORD
-  document.getElementById("transferButton").addEventListener("click", () => {
+  // Transfer -> Password dialog
+  transferForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
     const amount = Number(amountInput.value);
-    const notes = notesInput.value.trim();
 
     if (!Number.isFinite(amount) || amount <= 0) {
       alert("Please enter a valid amount.");
-      amountInput.focus();
       return;
     }
 
-    if (!notes) {
-      alert("Please select or enter notes.");
+    if (!selectedType) {
+      alert("Please select Salary, Payment, Bill or Family & Friends.");
+      return;
+    }
+
+    if (!notesInput.value.trim()) {
+      alert("Please enter notes.");
       notesInput.focus();
       return;
     }
 
-    passwordInput.value = "";
-    passwordError.textContent = "";
+    document.getElementById("passwordError").textContent = "";
+    document.getElementById("passwordInput").value = "";
     passwordModal.hidden = false;
-    passwordInput.focus();
+    document.getElementById("passwordInput").focus();
   });
 
-  // CANCEL PASSWORD
-  document.getElementById("cancelPassword").addEventListener("click", () => {
-    passwordModal.hidden = true;
-    passwordInput.value = "";
-  });
+  // Check demo password
+  passwordForm.addEventListener("submit", function(event) {
+    event.preventDefault();
 
-  // PASSWORD CHECK
-  function checkPassword() {
-    if (passwordInput.value !== "301120") {
-      passwordError.textContent = "Incorrect password. Please try again.";
-      passwordInput.value = "";
-      passwordInput.focus();
+    const password = document.getElementById("passwordInput").value;
+
+    if (password !== "301120") {
+      document.getElementById("passwordError").textContent =
+        "Incorrect password. Please try again.";
       return;
     }
 
-    passwordModal.hidden = true;
-    createReceipt();
-    showPage(page3);
-  }
-
-  document.getElementById("confirmPassword").addEventListener("click", checkPassword);
-
-  passwordInput.addEventListener("keydown", event => {
-    if (event.key === "Enter") checkPassword();
-
-    if (event.key === "Escape") {
-      passwordModal.hidden = true;
-    }
-  });
-
-  // CREATE RECEIPT
-  function createReceipt() {
     const amount = Number(amountInput.value);
-    const formatted = amount.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
 
-    document.getElementById("receiptBigAmount").textContent = "-" + formatted;
-    document.getElementById("receiptAmount").textContent = "-" + formatted + " Ks";
+    document.getElementById("receiptAmount").textContent =
+      new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(amount);
 
     document.getElementById("receiptName").textContent =
-      nameInput.value.trim();
+      customerName.value.trim();
 
-    document.getElementById("receiptPhone").textContent =
-      phoneInput.value.trim();
+    document.getElementById("receiptInfo").textContent =
+      customerInfo.value.trim();
+
+    document.getElementById("receiptType").textContent = selectedType;
 
     document.getElementById("receiptNotes").textContent =
       notesInput.value.trim();
 
-    document.getElementById("receiptTime").textContent =
-      new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false
-      }).replace(",", "");
+    document.getElementById("receiptDate").textContent =
+      new Date().toLocaleString();
 
     document.getElementById("receiptNumber").textContent =
-      "DEMO-" + Date.now().toString().slice(-12);
-  }
+      "DEMO-" + Date.now().toString().slice(-10);
 
-  // NEW TRANSFER
-  document.getElementById("newTransferButton").addEventListener("click", () => {
-    nameInput.value = "";
-    phoneInput.value = "";
-    amountInput.value = "";
-    notesInput.value = "";
-
-    document.querySelectorAll(".note-chip").forEach(chip => {
-      chip.classList.remove("selected");
-    });
-
-    showPage(page1);
-    nameInput.focus();
+    passwordModal.hidden = true;
+    showPage(page3);
   });
 
-  // PRINT RECEIPT
-  document.getElementById("printButton").addEventListener("click", () => {
+  document.getElementById("cancelPassword").addEventListener("click", function() {
+    passwordModal.hidden = true;
+  });
+
+  document.getElementById("backToPage1").addEventListener("click", function() {
+    showPage(page1);
+  });
+
+  document.getElementById("printButton").addEventListener("click", function() {
     window.print();
+  });
+
+  document.getElementById("newTransferButton").addEventListener("click", function() {
+    customerForm.reset();
+    transferForm.reset();
+
+    selectedType = "";
+    paymentType.value = "";
+
+    document.querySelectorAll(".note-chip").forEach(button => {
+      button.classList.remove("selected");
+      button.setAttribute("aria-pressed", "false");
+    });
+
+    passwordModal.hidden = true;
+    showPage(page1);
   });
 </script>
 

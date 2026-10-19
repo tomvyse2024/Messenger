@@ -1,446 +1,829 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0756a5">
-  <title>Cash Receive</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0756a5">
+<title>Cash Receive System</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    background: #eef3f9;
+    color: #172b4d;
+    font-family: Arial, sans-serif;
+}
+
+.app {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    margin: auto;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.header {
+    background: #0756a5;
+    color: white;
+    padding: 25px 22px;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 23px;
+}
+
+.header p {
+    margin: 7px 0 0;
+    font-size: 13px;
+    opacity: .85;
+}
+
+.content {
+    padding: 24px 20px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+h3 {
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.subtitle {
+    color: #778399;
+    font-size: 13px;
+    margin: 0 0 24px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 18px 0 8px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d8e0eb;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    background: #fff;
+    color: #172b4d;
+}
+
+input:focus, textarea:focus {
+    border-color: #0756a5;
+}
+
+textarea {
+    min-height: 85px;
+    resize: vertical;
+}
+
+.btn {
+    width: 100%;
+    padding: 15px;
+    margin-top: 22px;
+    border: none;
+    border-radius: 10px;
+    background: #0756a5;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn:active {
+    opacity: .85;
+}
+
+.btn.secondary {
+    background: #eaf1f9;
+    color: #0756a5;
+}
+
+.customer-box {
+    background: #f1f6fc;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 22px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.customer-box strong {
+    color: #0756a5;
+}
+
+.amount-wrap {
+    position: relative;
+}
+
+.amount-wrap input {
+    padding-right: 65px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.currency {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #778399;
+}
+
+.payment-types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.type-btn {
+    border: 1px solid #d8e0eb;
+    border-radius: 10px;
+    padding: 13px 8px;
+    background: white;
+    color: #43536b;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.type-btn.selected {
+    background: #0756a5;
+    color: white;
+    border-color: #0756a5;
+}
+
+.footer {
+    text-align: center;
+    padding: 22px 10px;
+    color: #99a4b5;
+    font-size: 12px;
+}
+
+/* Receipt */
+
+.receipt {
+    border: 1px solid #e1e7ef;
+    border-radius: 14px;
+    overflow: hidden;
+    background: white;
+}
+
+.receipt-head {
+    background: #0756a5;
+    color: white;
+    text-align: center;
+    padding: 23px 12px;
+}
+
+.receipt-head h3 {
+    margin: 0;
+}
+
+.receipt-head p {
+    font-size: 12px;
+    margin: 7px 0 0;
+    opacity: .85;
+}
+
+.receipt-body {
+    padding: 20px 16px;
+}
+
+.success-mark {
+    width: 55px;
+    height: 55px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #e3f8ed;
+    color: #16864c;
+    font-size: 30px;
+}
+
+.receipt-total {
+    text-align: center;
+    padding: 12px 0 20px;
+    border-bottom: 1px dashed #d8e0eb;
+}
+
+.receipt-total small {
+    color: #778399;
+}
+
+.receipt-total h2 {
+    color: #0756a5;
+    margin: 8px 0 0;
+    overflow-wrap: anywhere;
+}
+
+.receipt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid #edf0f5;
+    font-size: 13px;
+}
+
+.receipt-row span:first-child {
+    color: #778399;
+    flex-shrink: 0;
+}
+
+.receipt-row span:last-child {
+    text-align: right;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.qr-section {
+    text-align: center;
+    padding: 20px 0 5px;
+}
+
+#qrcode {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 12px auto;
+    min-height: 100px;
+}
+
+#qrcode img, #qrcode canvas {
+    width: 100px !important;
+    height: 100px !important;
+}
+
+.qr-section p {
+    color: #778399;
+    font-size: 11px;
+    margin: 5px 0;
+}
+
+/* Bottom popup keyboard */
+
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 25, 43, .48);
+    z-index: 100;
+}
+
+.overlay.show {
+    display: block;
+}
+
+.keyboard-sheet {
+    position: fixed;
+    z-index: 101;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 110%);
+    width: 100%;
+    max-width: 480px;
+    padding: 14px 18px calc(20px + env(safe-area-inset-bottom));
+    background: #f0f2f6;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -8px 30px rgba(0,0,0,.16);
+    transition: transform .25s ease;
+}
+
+.keyboard-sheet.show {
+    transform: translate(-50%, 0);
+}
+
+.sheet-handle {
+    width: 38px;
+    height: 4px;
+    background: #c5cad3;
+    border-radius: 10px;
+    margin: 0 auto 15px;
+}
+
+.keyboard-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.keyboard-subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: #7c8493;
+    margin-bottom: 15px;
+}
+
+.password-display {
+    min-height: 50px;
+    background: white;
+    border: 1px solid #dce1e9;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 13px;
+    font-size: 27px;
+    letter-spacing: 5px;
+    color: #0756a5;
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.key {
+    border: none;
+    border-radius: 9px;
+    height: 49px;
+    background: white;
+    color: #172b4d;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.key:active {
+    background: #dce8f7;
+}
+
+.key.action {
+    background: #dce3ed;
+    font-size: 15px;
+}
+
+.key.enter {
+    background: #0756a5;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.password-error {
+    display: none;
+    color: #c62828;
+    text-align: center;
+    font-size: 12px;
+    margin: 10px 0 0;
+}
+
+.password-error.show {
+    display: block;
+}
+
+@media print {
+    body {
+        background: white;
+    }
+
+    .app {
+        max-width: 100%;
+    }
+
+    .header, .footer, .no-print {
+        display: none !important;
+    }
+
+    .content {
+        padding: 0;
+    }
+
+    #page1, #page2 {
+        display: none !important;
+    }
+
+    #page3 {
+        display: block !important;
+    }
+
+    .receipt {
+        border: 1px solid #ddd;
+    }
+
+    .receipt-head {
+        background: white !important;
+        color: black !important;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .receipt-head p {
+        color: #444;
+    }
+}
+</style>
 </head>
+
 <body>
+<div class="app">
 
-<main class="app">
-
-  <!-- PAGE 1 -->
-  <section class="page active" id="page1">
-    <header class="topbar">
-      <span class="back-arrow">←</span>
-      <span>Customer Information</span>
-    </header>
-
-    <div class="page1-card">
-      <form id="customerForm">
-
-        <label for="customerName">Name</label>
-        <input
-          id="customerName"
-          type="text"
-          placeholder="Enter name"
-          autocomplete="off"
-          required
-        >
-
-        <label for="customerInfo">Phone Number / Address</label>
-        <input
-          id="customerInfo"
-          type="text"
-          placeholder="Enter phone number or address"
-          autocomplete="off"
-          required
-        >
-
-        <button class="primary-button" type="submit">
-          NEXT →
-        </button>
-
-      </form>
-    </div>
-  </section>
-
-
-  <!-- PAGE 2 -->
-  <section class="page" id="page2">
-    <header class="topbar">
-      <button class="back-arrow" id="backButton" type="button">←</button>
-      <span>Transfer</span>
-      <span class="history">History</span>
-    </header>
-
-    <div class="recipient">
-      <div class="avatar">
-        <span></span>
-      </div>
-
-      <div class="recipient-info">
-        <div id="displayName" class="recipient-name"></div>
-        <div id="displayInfo" class="recipient-info-text"></div>
-      </div>
+    <div class="header">
+        <h2>Cash Receive</h2>
+        <p>Customer Receipt System</p>
     </div>
 
-    <div class="transfer-card">
-      <form id="transferForm">
+    <div class="content">
 
-        <label for="amount">Amount (Ks)</label>
-        <input
-          id="amount"
-          class="line-input"
-          type="number"
-          min="1"
-          step="1"
-          inputmode="numeric"
-          placeholder="Enter Amount"
-          required
-        >
+        <!-- PAGE 1 -->
+        <section id="page1" class="page active">
+            <h3>Customer Information</h3>
+            <p class="subtitle">Enter customer details to continue.</p>
 
-        <label for="notes" class="notes-label">
-          Add Notes (Mandatory)
-        </label>
+            <form id="customerForm">
+                <label for="customerName">Customer Name</label>
+                <input id="customerName" type="text"
+                       placeholder="Enter customer name" required>
 
-        <input
-          id="notes"
-          class="line-input"
-          type="text"
-          placeholder="Please add notes"
-          autocomplete="off"
-          required
-        >
+                <label for="customerPhone">Phone Number</label>
+                <input id="customerPhone" type="tel"
+                       placeholder="Enter phone number" required>
 
-        <div class="note-options">
-          <button type="button" class="note-chip" data-type="Salary">
-            Salary
-          </button>
+                <button class="btn" type="submit">Next →</button>
+            </form>
+        </section>
 
-          <button type="button" class="note-chip" data-type="Payment">
-            Payment
-          </button>
+        <!-- PAGE 2 -->
+        <section id="page2" class="page">
+            <h3>Receive Payment</h3>
+            <p class="subtitle">Enter payment information.</p>
 
-          <button type="button" class="note-chip" data-type="Bill">
-            Bill
-          </button>
-
-          <button type="button" class="note-chip" data-type="Family & Friends">
-            Family &amp; Friends
-          </button>
-        </div>
-
-        <button class="primary-button transfer-button" type="submit">
-          Transfer
-        </button>
-
-      </form>
-
-      <div class="warnings">
-        <p>* Please check customer information and amount.</p>
-        <p>* Please select a payment type before transferring.</p>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- PASSWORD -->
-  <div class="modal" id="passwordModal" hidden>
-    <div class="password-box">
-      <h2>Enter Password</h2>
-      <p>Please enter your password to continue.</p>
-
-      <form id="passwordForm">
-        <input
-          id="passwordInput"
-          type="password"
-          inputmode="numeric"
-          placeholder="Enter password"
-          autocomplete="off"
-          required
-        >
-
-        <p id="passwordError" class="error-message"></p>
-
-        <div class="modal-buttons">
-          <button type="button" id="cancelPassword" class="cancel-button">
-            Cancel
-          </button>
-
-          <button type="submit" class="confirm-button">
-            Confirm
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-
-  <!-- PAGE 3 -->
-  <section class="page" id="page3">
-    <div class="receipt-screen">
-
-      <div class="receipt-card">
-
-        <header class="receipt-header">
-          <div class="brand">
-            <div class="brand-icon">CR</div>
-            <div class="brand-name">
-              CASH RECEIVE
-              <small>RECEIPT SYSTEM</small>
-            </div>
-          </div>
-
-          <div class="receipt-title">E-Receipt</div>
-        </header>
-
-        <div class="demo-label">
-          DEMO RECEIPT
-        </div>
-
-        <div class="receipt-content">
-
-          <div class="big-amount">
-            <span id="receiptAmount">0</span>
-            <small>Ks</small>
-          </div>
-
-          <div class="receipt-details">
-
-            <div class="detail-row">
-              <span>Date &amp; Time</span>
-              <strong id="receiptDate"></strong>
+            <div class="customer-box">
+                <strong id="displayName"></strong><br>
+                <span id="displayPhone"></span>
             </div>
 
-            <div class="detail-row">
-              <span>Transaction No.</span>
-              <strong id="receiptNumber"></strong>
+            <form id="paymentForm">
+                <label for="amount">Amount</label>
+                <div class="amount-wrap">
+                    <input id="amount" type="number" min="1"
+                           step="any" placeholder="0" required>
+                    <span class="currency">MMK</span>
+                </div>
+
+                <label>Payment Category</label>
+                <div class="payment-types">
+                    <button class="type-btn selected" type="button"
+                            data-type="Salary">Salary</button>
+                    <button class="type-btn" type="button"
+                            data-type="Payment">Payment</button>
+                    <button class="type-btn" type="button"
+                            data-type="Bill">Bill</button>
+                    <button class="type-btn" type="button"
+                            data-type="Family & Friends">Family & Friends</button>
+                </div>
+
+                <label for="notes">Notes</label>
+                <textarea id="notes"
+                          placeholder="Enter notes (optional)"></textarea>
+
+                <button class="btn" type="submit">Transfer</button>
+                <button class="btn secondary" id="backBtn"
+                        type="button">← Back</button>
+            </form>
+        </section>
+
+        <!-- PAGE 3 -->
+        <section id="page3" class="page">
+            <div class="receipt">
+                <div class="receipt-head">
+                    <h3>Cash Receive</h3>
+                    <p>PAYMENT RECEIPT</p>
+                </div>
+
+                <div class="receipt-body">
+                    <div class="success-mark">✓</div>
+
+                    <div class="receipt-total">
+                        <small>Amount Received</small>
+                        <h2 id="receiptAmount">0 MMK</h2>
+                    </div>
+
+                    <div class="receipt-row">
+                        <span>Receipt No.</span>
+                        <span id="receiptNumber"></span>
+                    </div>
+
+                    <div class="receipt-row">
+                        <span>Date</span>
+                        <span id="receiptDate"></span>
+                    </div>
+
+                    <div class="receipt-row">
+                        <span>Customer</span>
+                        <span id="receiptName"></span>
+                    </div>
+
+                    <div class="receipt-row">
+                        <span>Category</span>
+                        <span id="receiptType"></span>
+                    </div>
+
+                    <div class="receipt-row">
+                        <span>Notes</span>
+                        <span id="receiptNotes">-</span>
+                    </div>
+
+                    <div class="qr-section">
+                        <strong>Receipt QR Code</strong>
+                        <div id="qrcode"></div>
+                        <p>Scan to view receipt information</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="detail-row">
-              <span>Transfer To</span>
-              <strong id="receiptName"></strong>
-            </div>
+            <button class="btn no-print" id="printBtn" type="button">
+                Print Receipt
+            </button>
 
-            <div class="detail-row">
-              <span>Phone / Address</span>
-              <strong id="receiptInfo"></strong>
-            </div>
-
-            <div class="detail-row">
-              <span>Payment Type</span>
-              <strong id="receiptType"></strong>
-            </div>
-
-            <div class="detail-row">
-              <span>Notes</span>
-              <strong id="receiptNotes"></strong>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="perforation"></div>
-
-        <div class="receipt-footer">
-
-          <div class="receipt-mark">CR</div>
-
-          <div class="qr-area">
-            <div id="qrcode"></div>
-            <small>Scan receipt details</small>
-          </div>
-
-          <div class="thank-you">
-            Thank You!
-          </div>
-
-        </div>
-      </div>
-
-      <p class="disclaimer">
-        Demo receipt only. This does not confirm a real payment.
-      </p>
-
-      <button class="receipt-action" id="printButton" type="button">
-        PRINT RECEIPT
-      </button>
-
-      <button class="receipt-action secondary-action"
-              id="newTransferButton" type="button">
-        NEW TRANSFER
-      </button>
+            <button class="btn secondary no-print"
+                    id="newTransferBtn" type="button">
+                New Transfer
+            </button>
+        </section>
 
     </div>
-  </section>
 
-</main>
+    <div class="footer">Cash Receive System</div>
+</div>
 
-<!-- QR Code generator library -->
+<!-- Dark overlay -->
+<div id="keyboardOverlay" class="overlay"></div>
+
+<!-- Custom numeric keyboard -->
+<div id="keyboardSheet" class="keyboard-sheet">
+    <div class="sheet-handle"></div>
+
+    <div class="keyboard-title">Enter Password</div>
+    <div class="keyboard-subtitle">
+        Enter your password to continue
+    </div>
+
+    <div id="passwordDisplay" class="password-display">••••••</div>
+
+    <div class="keypad">
+        <button class="key" data-key="1">1</button>
+        <button class="key" data-key="2">2</button>
+        <button class="key" data-key="3">3</button>
+
+        <button class="key" data-key="4">4</button>
+        <button class="key" data-key="5">5</button>
+        <button class="key" data-key="6">6</button>
+
+        <button class="key" data-key="7">7</button>
+        <button class="key" data-key="8">8</button>
+        <button class="key" data-key="9">9</button>
+
+        <button class="key action" data-key="clear">Clear</button>
+        <button class="key" data-key="0">0</button>
+        <button class="key action" data-key="backspace">⌫</button>
+
+        <button class="key action" id="cancelPassword">Cancel</button>
+        <button class="key enter" id="submitPassword"
+                style="grid-column: span 2;">Enter ✓</button>
+    </div>
+
+    <p id="passwordError" class="password-error">
+        Incorrect password. Please try again.
+    </p>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
-  const page1 = document.getElementById("page1");
-  const page2 = document.getElementById("page2");
-  const page3 = document.getElementById("page3");
+const PASSWORD = "301120";
 
-  function showPage(page) {
-    [page1, page2, page3].forEach(item => {
-      item.classList.remove("active");
+let customerName = "";
+let customerPhone = "";
+let paymentType = "Salary";
+let passwordValue = "";
+let receiptCounter = 0;
+
+const $ = id => document.getElementById(id);
+
+function showPage(pageId) {
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
     });
 
-    page.classList.add("active");
-    window.scrollTo(0, 0);
-  }
+    $(pageId).classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
-  const customerForm = document.getElementById("customerForm");
-  const transferForm = document.getElementById("transferForm");
-  const passwordForm = document.getElementById("passwordForm");
-  const passwordModal = document.getElementById("passwordModal");
-
-  let selectedType = "";
-
-  // PAGE 1 -> PAGE 2
-  customerForm.addEventListener("submit", function(event) {
+/* PAGE 1 */
+$("customerForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const name = document.getElementById("customerName").value.trim();
-    const info = document.getElementById("customerInfo").value.trim();
+    customerName = $("customerName").value.trim();
+    customerPhone = $("customerPhone").value.trim();
 
-    if (!name || !info) {
-      alert("Please enter name and phone number or address.");
-      return;
+    if (!customerName || !customerPhone) {
+        return;
     }
 
-    document.getElementById("displayName").textContent = name;
-    document.getElementById("displayInfo").textContent = info;
+    $("displayName").textContent = customerName;
+    $("displayPhone").textContent = "(" + customerPhone + ")";
 
-    showPage(page2);
-  });
+    showPage("page2");
+});
 
-  // PAYMENT TYPE SELECTION
-  document.querySelectorAll(".note-chip").forEach(button => {
-    button.setAttribute("aria-pressed", "false");
-
+/* PAYMENT CATEGORY */
+document.querySelectorAll(".type-btn").forEach(button => {
     button.addEventListener("click", function() {
-      document.querySelectorAll(".note-chip").forEach(item => {
-        item.classList.remove("selected");
-        item.setAttribute("aria-pressed", "false");
-      });
+        document.querySelectorAll(".type-btn").forEach(item => {
+            item.classList.remove("selected");
+        });
 
-      this.classList.add("selected");
-      this.setAttribute("aria-pressed", "true");
-
-      selectedType = this.dataset.type;
-
-      document.getElementById("notes").value = selectedType;
+        this.classList.add("selected");
+        paymentType = this.dataset.type;
     });
-  });
+});
 
-  // TRANSFER -> PASSWORD
-  transferForm.addEventListener("submit", function(event) {
+/* OPEN CUSTOM KEYBOARD */
+$("paymentForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const amount = Number(document.getElementById("amount").value);
-    const notes = document.getElementById("notes").value.trim();
+    const amount = Number($("amount").value);
 
     if (!Number.isFinite(amount) || amount <= 0) {
-      alert("Please enter a valid amount.");
-      return;
+        $("amount").focus();
+        return;
     }
 
-    if (!selectedType) {
-      alert("Please select Salary, Payment, Bill or Family & Friends.");
-      return;
+    openKeyboard();
+});
+
+function openKeyboard() {
+    passwordValue = "";
+    updatePasswordDisplay();
+
+    $("passwordError").classList.remove("show");
+    $("keyboardOverlay").classList.add("show");
+    $("keyboardSheet").classList.add("show");
+}
+
+function closeKeyboard() {
+    $("keyboardOverlay").classList.remove("show");
+    $("keyboardSheet").classList.remove("show");
+}
+
+function updatePasswordDisplay() {
+    const count = passwordValue.length;
+    $("passwordDisplay").textContent =
+        count ? "● ".repeat(count).trim() : "Enter password";
+}
+
+/* CUSTOM KEY BUTTONS */
+document.querySelectorAll("[data-key]").forEach(button => {
+    button.addEventListener("click", function() {
+        const key = this.dataset.key;
+
+        $("passwordError").classList.remove("show");
+
+        if (key === "clear") {
+            passwordValue = "";
+        } else if (key === "backspace") {
+            passwordValue = passwordValue.slice(0, -1);
+        } else if (/^\d$/.test(key) && passwordValue.length < 12) {
+            passwordValue += key;
+        }
+
+        updatePasswordDisplay();
+    });
+});
+
+/* ENTER PASSWORD */
+$("submitPassword").addEventListener("click", function() {
+    if (passwordValue !== PASSWORD) {
+        $("passwordError").classList.add("show");
+        passwordValue = "";
+        updatePasswordDisplay();
+        return;
     }
 
-    if (!notes) {
-      alert("Please enter notes.");
-      return;
-    }
+    closeKeyboard();
+    createReceipt();
+});
 
-    document.getElementById("passwordInput").value = "";
-    document.getElementById("passwordError").textContent = "";
+$("cancelPassword").addEventListener("click", closeKeyboard);
+$("keyboardOverlay").addEventListener("click", closeKeyboard);
 
-    passwordModal.hidden = false;
-    document.getElementById("passwordInput").focus();
-  });
+/* CREATE RECEIPT */
+function createReceipt() {
+    const amount = Number($("amount").value);
+    const notes = $("notes").value.trim();
+    const now = new Date();
 
-  // PASSWORD -> PAGE 3
-  passwordForm.addEventListener("submit", function(event) {
-    event.preventDefault();
+    receiptCounter++;
 
-    if (document.getElementById("passwordInput").value !== "301120") {
-      document.getElementById("passwordError").textContent =
-        "Incorrect password. Please try again.";
-      return;
-    }
+    const dateText = now.toLocaleString();
 
-    const name = document.getElementById("customerName").value.trim();
-    const info = document.getElementById("customerInfo").value.trim();
-    const amount = Number(document.getElementById("amount").value);
-    const notes = document.getElementById("notes").value.trim();
-    const date = new Date().toLocaleString();
+    const receiptNumber =
+        "CR-" +
+        now.getFullYear().toString() +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        String(now.getDate()).padStart(2, "0") +
+        "-" +
+        String(now.getHours()).padStart(2, "0") +
+        String(now.getMinutes()).padStart(2, "0") +
+        String(now.getSeconds()).padStart(2, "0") +
+        String(receiptCounter).padStart(2, "0");
 
-    document.getElementById("receiptAmount").textContent =
-      new Intl.NumberFormat("en-US").format(amount);
+    $("receiptAmount").textContent =
+        amount.toLocaleString(undefined, {
+            maximumFractionDigits: 2
+        }) + " MMK";
 
-    document.getElementById("receiptDate").textContent = date;
-    document.getElementById("receiptNumber").textContent =
-      "DEMO-" + Date.now().toString().slice(-10);
+    $("receiptNumber").textContent = receiptNumber;
+    $("receiptDate").textContent = dateText;
 
-    document.getElementById("receiptName").textContent = name;
-    document.getElementById("receiptInfo").textContent = info;
-    document.getElementById("receiptType").textContent = selectedType;
-    document.getElementById("receiptNotes").textContent = notes;
+    // Name followed by phone number in parentheses
+    $("receiptName").textContent =
+        customerName + " (" + customerPhone + ")";
 
-    const qrBox = document.getElementById("qrcode");
-    qrBox.replaceChildren();
+    $("receiptType").textContent = paymentType;
+    $("receiptNotes").textContent = notes || "-";
 
-    if (typeof QRCode === "undefined") {
-      alert("QR generator could not load. Please check your internet connection.");
-      return;
-    }
-
+    // QR contains receipt information; it does not verify payment.
     const qrData = JSON.stringify({
-      customerName: name,
-      phoneOrAddress: info,
-      amount: amount,
-      paymentType: selectedType,
-      notes: notes,
-      dateTime: date
+        receiptNumber: receiptNumber,
+        customerName: customerName,
+        phoneNumber: customerPhone,
+        amount: amount,
+        currency: "MMK",
+        category: paymentType,
+        notes: notes,
+        dateTime: now.toISOString()
     });
 
-    new QRCode(qrBox, {
-      text: qrData,
-      width: 100,
-      height: 100,
-      colorDark: "#111111",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.M
-    });
+    $("qrcode").innerHTML = "";
 
-    passwordModal.hidden = true;
-    showPage(page3);
-  });
+    if (typeof QRCode !== "undefined") {
+        new QRCode($("qrcode"), {
+            text: qrData,
+            width: 100,
+            height: 100,
+            correctLevel: QRCode.CorrectLevel.M
+        });
+    } else {
+        $("qrcode").textContent = "QR unavailable. Check internet connection.";
+    }
 
-  // BACK
-  document.getElementById("backButton").addEventListener("click", function() {
-    showPage(page1);
-  });
+    showPage("page3");
+}
 
-  // CANCEL PASSWORD
-  document.getElementById("cancelPassword").addEventListener("click", function() {
-    passwordModal.hidden = true;
-  });
+/* BACK */
+$("backBtn").addEventListener("click", function() {
+    showPage("page1");
+});
 
-  // PRINT RECEIPT
-  document.getElementById("printButton").addEventListener("click", function() {
+/* PRINT */
+$("printBtn").addEventListener("click", function() {
     window.print();
-  });
+});
 
-  // NEW TRANSFER
-  document.getElementById("newTransferButton").addEventListener("click", function() {
-    customerForm.reset();
-    transferForm.reset();
+/* NEW TRANSFER */
+$("newTransferBtn").addEventListener("click", function() {
+    $("customerForm").reset();
+    $("paymentForm").reset();
 
-    selectedType = "";
+    paymentType = "Salary";
 
-    document.querySelectorAll(".note-chip").forEach(button => {
-      button.classList.remove("selected");
-      button.setAttribute("aria-pressed", "false");
+    document.querySelectorAll(".type-btn").forEach(button => {
+        button.classList.toggle(
+            "selected",
+            button.dataset.type === "Salary"
+        );
     });
 
-    document.getElementById("qrcode").replaceChildren();
-
-    passwordModal.hidden = true;
-    showPage(page1);
-  });
+    $("qrcode").innerHTML = "";
+    showPage("page1");
+});
 </script>
-
 </body>
 </html>

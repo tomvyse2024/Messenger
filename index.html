@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,11 +13,18 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+:root {
+    --blue: #0756a5;
+    --dark-blue: #06427f;
+    --light-gray: #f0f0f0;
+    --text-gray: #999999;
+}
+
 body {
     margin: 0;
-    background: #eef3f9;
-    color: #172b4d;
-    font-family: Arial, sans-serif;
+    background: #edf2f8;
+    color: #111;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .app {
@@ -25,30 +32,29 @@ body {
     max-width: 480px;
     min-height: 100vh;
     margin: auto;
-    background: #fff;
-    position: relative;
+    background: white;
     overflow: hidden;
 }
 
-.header {
-    background: #0756a5;
+.top-header {
+    background: var(--blue);
     color: white;
-    padding: 25px 22px;
+    padding: 24px 22px;
 }
 
-.header h2 {
+.top-header h2 {
     margin: 0;
     font-size: 23px;
 }
 
-.header p {
-    margin: 7px 0 0;
-    font-size: 13px;
+.top-header p {
+    margin: 6px 0 0;
+    font-size: 12px;
     opacity: .85;
 }
 
 .content {
-    padding: 24px 20px;
+    padding: 22px 20px;
 }
 
 .page {
@@ -60,237 +66,303 @@ body {
 }
 
 h3 {
-    margin: 0 0 8px;
     font-size: 21px;
+    margin: 0 0 8px;
 }
 
 .subtitle {
-    color: #778399;
+    color: #7c8797;
     font-size: 13px;
-    margin: 0 0 24px;
+    margin: 0 0 22px;
 }
 
 label {
     display: block;
+    margin: 17px 0 8px;
     font-size: 13px;
     font-weight: bold;
-    margin: 18px 0 8px;
 }
 
 input, textarea {
     width: 100%;
     padding: 14px;
-    border: 1px solid #d8e0eb;
-    border-radius: 10px;
     font-size: 16px;
-    outline: none;
-    background: #fff;
     color: #172b4d;
+    background: white;
+    border: 1px solid #d6dfeb;
+    border-radius: 9px;
+    outline: none;
 }
 
 input:focus, textarea:focus {
-    border-color: #0756a5;
+    border-color: var(--blue);
 }
 
 textarea {
-    min-height: 85px;
     resize: vertical;
+    min-height: 75px;
 }
 
 .btn {
     width: 100%;
     padding: 15px;
-    margin-top: 22px;
-    border: none;
-    border-radius: 10px;
-    background: #0756a5;
+    margin-top: 20px;
+    border: 0;
+    border-radius: 9px;
     color: white;
+    background: var(--blue);
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
 }
 
-.btn:active {
-    opacity: .85;
-}
-
 .btn.secondary {
-    background: #eaf1f9;
-    color: #0756a5;
+    background: #e8eff8;
+    color: var(--blue);
 }
 
-.customer-box {
-    background: #f1f6fc;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 22px;
-    line-height: 1.7;
+.info-box {
+    background: #f0f5fb;
+    border-radius: 10px;
+    padding: 14px;
+    line-height: 1.8;
     overflow-wrap: anywhere;
-}
-
-.customer-box strong {
-    color: #0756a5;
-}
-
-.amount-wrap {
-    position: relative;
-}
-
-.amount-wrap input {
-    padding-right: 65px;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.currency {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #778399;
 }
 
 .payment-types {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 9px;
 }
 
 .type-btn {
-    border: 1px solid #d8e0eb;
-    border-radius: 10px;
-    padding: 13px 8px;
     background: white;
-    color: #43536b;
+    border: 1px solid #d4dce7;
+    border-radius: 9px;
+    padding: 12px 6px;
+    color: #33445b;
     font-size: 13px;
-    cursor: pointer;
 }
 
 .type-btn.selected {
-    background: #0756a5;
+    background: var(--blue);
     color: white;
-    border-color: #0756a5;
+    border-color: var(--blue);
 }
 
 .footer {
+    padding: 20px 10px;
     text-align: center;
-    padding: 22px 10px;
-    color: #99a4b5;
+    color: #9aa4b3;
     font-size: 12px;
 }
 
-/* Receipt */
+/* RECEIPT OUTER FRAME */
 
-.receipt {
-    border: 1px solid #e1e7ef;
-    border-radius: 14px;
-    overflow: hidden;
+.receipt-page {
+    background: var(--blue);
+    margin: -22px -20px;
+    padding: 24px 20px 26px;
+    min-height: 600px;
+}
+
+.receipt-card {
     background: white;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
-.receipt-head {
-    background: #0756a5;
-    color: white;
+.receipt-header {
+    background: #f0f0f0;
+    min-height: 70px;
+    padding: 15px 17px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.bank-logo-text {
+    color: #c8172c;
+    font-weight: bold;
+    font-size: clamp(13px, 3.5vw, 19px);
+    line-height: 1.1;
+}
+
+.bank-logo-text small {
+    display: block;
+    font-size: 6px;
+    letter-spacing: 1.3px;
+    color: #254f83;
+    margin-top: 4px;
+}
+
+.e-receipt-title {
+    font-size: clamp(19px, 5vw, 26px);
+    white-space: nowrap;
+}
+
+.receipt-main {
+    padding: 28px 17px 18px;
+}
+
+.big-amount {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
     text-align: center;
-    padding: 23px 12px;
+    min-height: 115px;
+    padding-top: 20px;
+    color: #363636;
 }
 
-.receipt-head h3 {
-    margin: 0;
-}
-
-.receipt-head p {
-    font-size: 12px;
-    margin: 7px 0 0;
-    opacity: .85;
-}
-
-.receipt-body {
-    padding: 20px 16px;
-}
-
-.success-mark {
-    width: 55px;
-    height: 55px;
-    margin: 0 auto 12px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: #e3f8ed;
-    color: #16864c;
-    font-size: 30px;
-}
-
-.receipt-total {
-    text-align: center;
-    padding: 12px 0 20px;
-    border-bottom: 1px dashed #d8e0eb;
-}
-
-.receipt-total small {
-    color: #778399;
-}
-
-.receipt-total h2 {
-    color: #0756a5;
-    margin: 8px 0 0;
+.big-amount strong {
+    font-size: clamp(27px, 7.3vw, 39px);
+    font-weight: 400;
     overflow-wrap: anywhere;
 }
 
-.receipt-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 11px 0;
-    border-bottom: 1px solid #edf0f5;
-    font-size: 13px;
+.big-amount span {
+    font-size: 17px;
 }
 
-.receipt-row span:first-child {
-    color: #778399;
-    flex-shrink: 0;
+.receipt-details {
+    padding-top: 8px;
 }
 
-.receipt-row span:last-child {
+.detail-row {
+    display: grid;
+    grid-template-columns: 42% 58%;
+    align-items: start;
+    gap: 4px;
+    padding: 12px 0;
+    font-size: clamp(12px, 3.3vw, 16px);
+    line-height: 1.45;
+}
+
+.detail-label {
+    color: var(--text-gray);
+}
+
+.detail-value {
     text-align: right;
     overflow-wrap: anywhere;
-    white-space: pre-wrap;
+    word-break: break-word;
 }
 
-.qr-section {
+.receipt-divider {
+    position: relative;
+    border-top: 2px dashed #316b95;
+    margin: 8px 0 0;
+}
+
+.receipt-divider::before,
+.receipt-divider::after {
+    content: "";
+    position: absolute;
+    top: -13px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--blue);
+}
+
+.receipt-divider::before {
+    left: -30px;
+}
+
+.receipt-divider::after {
+    right: -30px;
+}
+
+/* KPay + QR + message */
+
+.receipt-bottom {
+    display: grid;
+    grid-template-columns: 26% 25% 49%;
+    align-items: center;
+    gap: 0;
+    padding: 22px 10px 24px;
+}
+
+.kpay-area {
     text-align: center;
-    padding: 20px 0 5px;
+    padding-right: 8px;
+}
+
+.kpay-area img {
+    width: 100%;
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin: auto;
+    object-fit: contain;
+}
+
+.kpay-caption {
+    font-size: 9px;
+    line-height: 1.4;
+    color: #35647e;
+    margin-top: 8px;
+}
+
+.qr-area {
+    border-left: 2px solid #e0e0e0;
+    text-align: center;
+    padding: 0 5px;
+    min-width: 0;
+}
+
+.qr-area strong {
+    display: none;
 }
 
 #qrcode {
+    width: 100%;
+    min-width: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 12px auto;
-    min-height: 100px;
 }
 
-#qrcode img, #qrcode canvas {
-    width: 100px !important;
-    height: 100px !important;
+#qrcode canvas,
+#qrcode img {
+    width: 100% !important;
+    max-width: 78px;
+    height: auto !important;
+    aspect-ratio: 1 / 1;
+    image-rendering: pixelated;
 }
 
-.qr-section p {
-    color: #778399;
-    font-size: 11px;
-    margin: 5px 0;
+.thank-you {
+    text-align: center;
+    padding-left: 7px;
+    font-size: clamp(10px, 2.8vw, 15px);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
-/* Bottom popup keyboard */
+.disclaimer {
+    color: white;
+    font-size: 12px;
+    line-height: 1.5;
+    padding-top: 23px;
+}
+
+.receipt-actions {
+    margin-top: 22px;
+}
+
+/* CUSTOM PASSWORD KEYBOARD */
 
 .overlay {
-    display: none;
     position: fixed;
     inset: 0;
-    background: rgba(13, 25, 43, .48);
-    z-index: 100;
+    background: rgba(0,0,0,.45);
+    z-index: 10;
+    display: none;
 }
 
 .overlay.show {
@@ -299,16 +371,15 @@ textarea {
 
 .keyboard-sheet {
     position: fixed;
-    z-index: 101;
+    z-index: 11;
     bottom: 0;
     left: 50%;
-    transform: translate(-50%, 110%);
     width: 100%;
     max-width: 480px;
-    padding: 14px 18px calc(20px + env(safe-area-inset-bottom));
     background: #f0f2f6;
+    padding: 14px 18px calc(20px + env(safe-area-inset-bottom));
     border-radius: 20px 20px 0 0;
-    box-shadow: 0 -8px 30px rgba(0,0,0,.16);
+    transform: translate(-50%, 110%);
     transition: transform .25s ease;
 }
 
@@ -316,11 +387,11 @@ textarea {
     transform: translate(-50%, 0);
 }
 
-.sheet-handle {
+.handle {
     width: 38px;
     height: 4px;
+    border-radius: 5px;
     background: #c5cad3;
-    border-radius: 10px;
     margin: 0 auto 15px;
 }
 
@@ -328,29 +399,28 @@ textarea {
     text-align: center;
     font-weight: bold;
     font-size: 16px;
-    margin-bottom: 5px;
 }
 
-.keyboard-subtitle {
+.keyboard-hint {
     text-align: center;
+    color: #778399;
     font-size: 12px;
-    color: #7c8493;
-    margin-bottom: 15px;
+    margin: 7px 0 13px;
 }
 
 .password-display {
-    min-height: 50px;
     background: white;
-    border: 1px solid #dce1e9;
-    border-radius: 10px;
+    border: 1px solid #d8dfe9;
+    border-radius: 9px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    margin-bottom: 13px;
-    font-size: 27px;
-    letter-spacing: 5px;
-    color: #0756a5;
+    font-size: 23px;
+    letter-spacing: 8px;
+    color: var(--blue);
+    margin-bottom: 12px;
+    overflow: hidden;
 }
 
 .keypad {
@@ -360,36 +430,31 @@ textarea {
 }
 
 .key {
+    height: 46px;
     border: none;
-    border-radius: 9px;
-    height: 49px;
+    border-radius: 8px;
     background: white;
+    font-size: 21px;
     color: #172b4d;
-    font-size: 22px;
-    cursor: pointer;
-    box-shadow: 0 1px 1px rgba(0,0,0,.04);
-}
-
-.key:active {
-    background: #dce8f7;
 }
 
 .key.action {
     background: #dce3ed;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .key.enter {
-    background: #0756a5;
+    background: var(--blue);
     color: white;
-    font-size: 15px;
     font-weight: bold;
+    font-size: 14px;
+    grid-column: span 2;
 }
 
 .password-error {
     display: none;
-    color: #c62828;
     text-align: center;
+    color: #c62828;
     font-size: 12px;
     margin: 10px 0 0;
 }
@@ -398,21 +463,26 @@ textarea {
     display: block;
 }
 
+/* PRINT */
+
 @media print {
-    body {
-        background: white;
+    @page {
+        size: auto;
+        margin: 8mm;
     }
 
-    .app {
+    body, .app {
+        background: white !important;
         max-width: 100%;
+        min-height: auto;
     }
 
-    .header, .footer, .no-print {
+    .top-header, .footer, .no-print {
         display: none !important;
     }
 
     .content {
-        padding: 0;
+        padding: 0 !important;
     }
 
     #page1, #page2 {
@@ -423,18 +493,19 @@ textarea {
         display: block !important;
     }
 
-    .receipt {
-        border: 1px solid #ddd;
+    .receipt-page {
+        margin: 0;
+        padding: 12px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
-    .receipt-head {
-        background: white !important;
-        color: black !important;
-        border-bottom: 1px solid #ddd;
+    .receipt-card {
+        break-inside: avoid;
     }
 
-    .receipt-head p {
-        color: #444;
+    .disclaimer {
+        color: #333;
     }
 }
 </style>
@@ -443,12 +514,12 @@ textarea {
 <body>
 <div class="app">
 
-    <div class="header">
-        <h2>Cash Receive</h2>
+    <header class="top-header">
+        <h2>Cash Receive System</h2>
         <p>Customer Receipt System</p>
-    </div>
+    </header>
 
-    <div class="content">
+    <main class="content">
 
         <!-- PAGE 1 -->
         <section id="page1" class="page active">
@@ -457,12 +528,12 @@ textarea {
 
             <form id="customerForm">
                 <label for="customerName">Customer Name</label>
-                <input id="customerName" type="text"
-                       placeholder="Enter customer name" required>
+                <input id="customerName" required
+                       placeholder="Enter customer name">
 
                 <label for="customerPhone">Phone Number</label>
-                <input id="customerPhone" type="tel"
-                       placeholder="Enter phone number" required>
+                <input id="customerPhone" type="tel" required
+                       placeholder="Enter phone number">
 
                 <button class="btn" type="submit">Next →</button>
             </form>
@@ -471,22 +542,19 @@ textarea {
         <!-- PAGE 2 -->
         <section id="page2" class="page">
             <h3>Receive Payment</h3>
-            <p class="subtitle">Enter payment information.</p>
+            <p class="subtitle">Enter the amount and payment details.</p>
 
-            <div class="customer-box">
+            <div class="info-box">
                 <strong id="displayName"></strong><br>
                 <span id="displayPhone"></span>
             </div>
 
             <form id="paymentForm">
-                <label for="amount">Amount</label>
-                <div class="amount-wrap">
-                    <input id="amount" type="number" min="1"
-                           step="any" placeholder="0" required>
-                    <span class="currency">MMK</span>
-                </div>
+                <label for="amount">Amount (MMK)</label>
+                <input id="amount" type="number" min="0.01"
+                       step="any" required placeholder="Enter amount">
 
-                <label>Payment Category</label>
+                <label>Transaction Type</label>
                 <div class="payment-types">
                     <button class="type-btn selected" type="button"
                             data-type="Salary">Salary</button>
@@ -503,86 +571,119 @@ textarea {
                           placeholder="Enter notes (optional)"></textarea>
 
                 <button class="btn" type="submit">Transfer</button>
-                <button class="btn secondary" id="backBtn"
-                        type="button">← Back</button>
+                <button class="btn secondary" id="backBtn" type="button">
+                    ← Back
+                </button>
             </form>
         </section>
 
-        <!-- PAGE 3 -->
+        <!-- PAGE 3: E-RECEIPT FRAME -->
         <section id="page3" class="page">
-            <div class="receipt">
-                <div class="receipt-head">
-                    <h3>Cash Receive</h3>
-                    <p>PAYMENT RECEIPT</p>
+            <div class="receipt-page">
+                <div class="receipt-card">
+
+                    <div class="receipt-header">
+                        <div class="bank-logo-text">
+                            △ KBZ BANK
+                            <small>STRENGTH OF MYANMAR</small>
+                        </div>
+                        <div class="e-receipt-title">E-Receipt</div>
+                    </div>
+
+                    <div class="receipt-main">
+
+                        <div class="big-amount">
+                            <strong id="bigAmount">0.00</strong>
+                            <span>Ks</span>
+                        </div>
+
+                        <div class="receipt-details">
+
+                            <div class="detail-row">
+                                <span class="detail-label">Transaction Time</span>
+                                <span class="detail-value" id="receiptDate"></span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Transaction No</span>
+                                <span class="detail-value" id="receiptNumber"></span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Transaction Type</span>
+                                <span class="detail-value">Transfer</span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Transfer To</span>
+                                <span class="detail-value" id="receiptCustomer"></span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Amount</span>
+                                <span class="detail-value" id="receiptAmount"></span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Notes</span>
+                                <span class="detail-value" id="receiptNotes"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="receipt-divider"></div>
+
+                        <div class="receipt-bottom">
+
+                            <!-- Put kpay.png beside index.html -->
+                            <div class="kpay-area">
+                                <img src="kpay.png" alt="KBZPay Logo">
+                                <div class="kpay-caption">
+                                    Scan to verify payment
+                                </div>
+                            </div>
+
+                            <div class="qr-area">
+                                <div id="qrcode"></div>
+                            </div>
+
+                            <div class="thank-you">
+                                Thank you for using KBZPay!
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
-                <div class="receipt-body">
-                    <div class="success-mark">✓</div>
+                <div class="disclaimer">
+                    This is a demonstration receipt frame only.
+                    Please confirm the actual transaction status with the merchant.
+                </div>
 
-                    <div class="receipt-total">
-                        <small>Amount Received</small>
-                        <h2 id="receiptAmount">0 MMK</h2>
-                    </div>
-
-                    <div class="receipt-row">
-                        <span>Receipt No.</span>
-                        <span id="receiptNumber"></span>
-                    </div>
-
-                    <div class="receipt-row">
-                        <span>Date</span>
-                        <span id="receiptDate"></span>
-                    </div>
-
-                    <div class="receipt-row">
-                        <span>Customer</span>
-                        <span id="receiptName"></span>
-                    </div>
-
-                    <div class="receipt-row">
-                        <span>Category</span>
-                        <span id="receiptType"></span>
-                    </div>
-
-                    <div class="receipt-row">
-                        <span>Notes</span>
-                        <span id="receiptNotes">-</span>
-                    </div>
-
-                    <div class="qr-section">
-                        <strong>Receipt QR Code</strong>
-                        <div id="qrcode"></div>
-                        <p>Scan to view receipt information</p>
-                    </div>
+                <div class="receipt-actions no-print">
+                    <button class="btn" id="printBtn" type="button">
+                        Print Receipt
+                    </button>
+                    <button class="btn secondary" id="newTransferBtn"
+                            type="button">
+                        New Transfer
+                    </button>
                 </div>
             </div>
-
-            <button class="btn no-print" id="printBtn" type="button">
-                Print Receipt
-            </button>
-
-            <button class="btn secondary no-print"
-                    id="newTransferBtn" type="button">
-                New Transfer
-            </button>
         </section>
 
-    </div>
+    </main>
 
     <div class="footer">Cash Receive System</div>
 </div>
 
-<!-- Dark overlay -->
-<div id="keyboardOverlay" class="overlay"></div>
+<!-- PASSWORD POPUP -->
+<div id="overlay" class="overlay"></div>
 
-<!-- Custom numeric keyboard -->
 <div id="keyboardSheet" class="keyboard-sheet">
-    <div class="sheet-handle"></div>
-
+    <div class="handle"></div>
     <div class="keyboard-title">Enter Password</div>
-    <div class="keyboard-subtitle">
-        Enter your password to continue
-    </div>
+    <div class="keyboard-hint">Enter password to continue</div>
 
     <div id="passwordDisplay" class="password-display">••••••</div>
 
@@ -604,8 +705,7 @@ textarea {
         <button class="key action" data-key="backspace">⌫</button>
 
         <button class="key action" id="cancelPassword">Cancel</button>
-        <button class="key enter" id="submitPassword"
-                style="grid-column: span 2;">Enter ✓</button>
+        <button class="key enter" id="submitPassword">Enter ✓</button>
     </div>
 
     <p id="passwordError" class="password-error">
@@ -618,33 +718,31 @@ textarea {
 <script>
 const PASSWORD = "301120";
 
-let customerName = "";
-let customerPhone = "";
-let paymentType = "Salary";
-let passwordValue = "";
-let receiptCounter = 0;
-
 const $ = id => document.getElementById(id);
 
-function showPage(pageId) {
+let customerName = "";
+let customerPhone = "";
+let amount = 0;
+let paymentType = "Salary";
+let passwordValue = "";
+
+function showPage(id) {
     document.querySelectorAll(".page").forEach(page => {
         page.classList.remove("active");
     });
 
-    $(pageId).classList.add("active");
+    $(id).classList.add("active");
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 /* PAGE 1 */
-$("customerForm").addEventListener("submit", function(event) {
+$("customerForm").addEventListener("submit", event => {
     event.preventDefault();
 
     customerName = $("customerName").value.trim();
     customerPhone = $("customerPhone").value.trim();
 
-    if (!customerName || !customerPhone) {
-        return;
-    }
+    if (!customerName || !customerPhone) return;
 
     $("displayName").textContent = customerName;
     $("displayPhone").textContent = "(" + customerPhone + ")";
@@ -652,57 +750,49 @@ $("customerForm").addEventListener("submit", function(event) {
     showPage("page2");
 });
 
-/* PAYMENT CATEGORY */
+/* CATEGORY */
 document.querySelectorAll(".type-btn").forEach(button => {
-    button.addEventListener("click", function() {
+    button.addEventListener("click", () => {
         document.querySelectorAll(".type-btn").forEach(item => {
             item.classList.remove("selected");
         });
 
-        this.classList.add("selected");
-        paymentType = this.dataset.type;
+        button.classList.add("selected");
+        paymentType = button.dataset.type;
     });
 });
 
-/* OPEN CUSTOM KEYBOARD */
-$("paymentForm").addEventListener("submit", function(event) {
+/* PASSWORD POPUP */
+$("paymentForm").addEventListener("submit", event => {
     event.preventDefault();
 
-    const amount = Number($("amount").value);
+    amount = Number($("amount").value);
 
     if (!Number.isFinite(amount) || amount <= 0) {
         $("amount").focus();
         return;
     }
 
-    openKeyboard();
-});
-
-function openKeyboard() {
     passwordValue = "";
     updatePasswordDisplay();
-
     $("passwordError").classList.remove("show");
-    $("keyboardOverlay").classList.add("show");
+    $("overlay").classList.add("show");
     $("keyboardSheet").classList.add("show");
-}
+});
 
 function closeKeyboard() {
-    $("keyboardOverlay").classList.remove("show");
+    $("overlay").classList.remove("show");
     $("keyboardSheet").classList.remove("show");
 }
 
 function updatePasswordDisplay() {
-    const count = passwordValue.length;
     $("passwordDisplay").textContent =
-        count ? "● ".repeat(count).trim() : "Enter password";
+        passwordValue.length ? "● ".repeat(passwordValue.length).trim() : "••••••";
 }
 
-/* CUSTOM KEY BUTTONS */
 document.querySelectorAll("[data-key]").forEach(button => {
-    button.addEventListener("click", function() {
-        const key = this.dataset.key;
-
+    button.addEventListener("click", () => {
+        const key = button.dataset.key;
         $("passwordError").classList.remove("show");
 
         if (key === "clear") {
@@ -717,68 +807,61 @@ document.querySelectorAll("[data-key]").forEach(button => {
     });
 });
 
-/* ENTER PASSWORD */
-$("submitPassword").addEventListener("click", function() {
+$("overlay").addEventListener("click", closeKeyboard);
+$("cancelPassword").addEventListener("click", closeKeyboard);
+
+$("submitPassword").addEventListener("click", () => {
     if (passwordValue !== PASSWORD) {
-        $("passwordError").classList.add("show");
         passwordValue = "";
         updatePasswordDisplay();
+        $("passwordError").classList.add("show");
         return;
     }
 
     closeKeyboard();
-    createReceipt();
+    generateReceipt();
 });
 
-$("cancelPassword").addEventListener("click", closeKeyboard);
-$("keyboardOverlay").addEventListener("click", closeKeyboard);
-
-/* CREATE RECEIPT */
-function createReceipt() {
-    const amount = Number($("amount").value);
-    const notes = $("notes").value.trim();
+/* RECEIPT */
+function generateReceipt() {
     const now = new Date();
+    const notes = $("notes").value.trim();
 
-    receiptCounter++;
-
-    const dateText = now.toLocaleString();
-
-    const receiptNumber =
-        "CR-" +
-        now.getFullYear().toString() +
+    const transactionNo =
+        "0100" +
+        now.getFullYear().toString().slice(-2) +
         String(now.getMonth() + 1).padStart(2, "0") +
         String(now.getDate()).padStart(2, "0") +
-        "-" +
         String(now.getHours()).padStart(2, "0") +
         String(now.getMinutes()).padStart(2, "0") +
-        String(now.getSeconds()).padStart(2, "0") +
-        String(receiptCounter).padStart(2, "0");
+        String(now.getSeconds()).padStart(2, "0");
 
-    $("receiptAmount").textContent =
-        amount.toLocaleString(undefined, {
-            maximumFractionDigits: 2
-        }) + " MMK";
+    const formattedAmount = amount.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
 
-    $("receiptNumber").textContent = receiptNumber;
-    $("receiptDate").textContent = dateText;
+    $("bigAmount").textContent = "-" + formattedAmount;
+    $("receiptAmount").textContent = "-" + formattedAmount + " Ks";
+    $("receiptDate").textContent = formatDate(now);
+    $("receiptNumber").textContent = transactionNo;
 
-    // Name followed by phone number in parentheses
-    $("receiptName").textContent =
+    // Customer name followed by phone number in parentheses
+    $("receiptCustomer").textContent =
         customerName + " (" + customerPhone + ")";
 
-    $("receiptType").textContent = paymentType;
-    $("receiptNotes").textContent = notes || "-";
+    $("receiptNotes").textContent = notes || paymentType;
 
-    // QR contains receipt information; it does not verify payment.
     const qrData = JSON.stringify({
-        receiptNumber: receiptNumber,
-        customerName: customerName,
-        phoneNumber: customerPhone,
+        demo: true,
+        transactionNo: transactionNo,
+        customer: customerName,
+        phone: customerPhone,
         amount: amount,
         currency: "MMK",
         category: paymentType,
         notes: notes,
-        dateTime: now.toISOString()
+        time: now.toISOString()
     });
 
     $("qrcode").innerHTML = "";
@@ -786,8 +869,8 @@ function createReceipt() {
     if (typeof QRCode !== "undefined") {
         new QRCode($("qrcode"), {
             text: qrData,
-            width: 100,
-            height: 100,
+            width: 180,
+            height: 180,
             correctLevel: QRCode.CorrectLevel.M
         });
     } else {
@@ -797,20 +880,33 @@ function createReceipt() {
     showPage("page3");
 }
 
+function formatDate(date) {
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const yyyy = date.getFullYear();
+
+    const hh = String(date.getHours()).padStart(2, "0");
+    const min = String(date.getMinutes()).padStart(2, "0");
+    const ss = String(date.getSeconds()).padStart(2, "0");
+
+    return `${dd}/${mm}/${yyyy} ${hh}:${min}:${ss}`;
+}
+
 /* BACK */
-$("backBtn").addEventListener("click", function() {
+$("backBtn").addEventListener("click", () => {
     showPage("page1");
 });
 
 /* PRINT */
-$("printBtn").addEventListener("click", function() {
+$("printBtn").addEventListener("click", () => {
     window.print();
 });
 
 /* NEW TRANSFER */
-$("newTransferBtn").addEventListener("click", function() {
+$("newTransferBtn").addEventListener("click", () => {
     $("customerForm").reset();
     $("paymentForm").reset();
+    $("qrcode").innerHTML = "";
 
     paymentType = "Salary";
 
@@ -821,7 +917,6 @@ $("newTransferBtn").addEventListener("click", function() {
         );
     });
 
-    $("qrcode").innerHTML = "";
     showPage("page1");
 });
 </script>

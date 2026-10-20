@@ -450,6 +450,12 @@ textarea {
     font-size: 14px;
 }
 
+.keypad-empty {
+    background: transparent !important;
+    box-shadow: none;
+    pointer-events: none;
+}
+
 .key.enter {
     background: var(--blue);
     color: white;
@@ -643,9 +649,9 @@ textarea {
                 <input id="amount" type="number" inputmode="decimal" min="0.01"
                        step="any" required placeholder="Enter Amount">
 
-                <label for="notes">Add Notes (Mandatory)</label>
-                <textarea id="notes" required
-                          placeholder="Please add Notes"></textarea>
+                <label for="notes">Add Notes</label>
+                <textarea id="notes" readonly
+                          placeholder="Choose a transaction type below"></textarea>
 
                 <div class="payment-types" aria-label="Transaction type">
                     <button class="type-btn" type="button" data-type="Salary">Salary</button>
@@ -787,8 +793,8 @@ textarea {
         <button class="key" data-key="8">8</button>
         <button class="key" data-key="9">9</button>
 
+        <button class="key keypad-empty" type="button" aria-hidden="true" tabindex="-1"></button>
         <button class="key" data-key="0">0</button>
-        <button class="key" data-key=".">.</button>
         <button class="key action" data-key="backspace" aria-label="Backspace">⌫</button>
     </div>
 
@@ -843,17 +849,17 @@ document.querySelectorAll(".type-btn").forEach(button => {
 
         button.classList.add("selected");
         paymentType = button.dataset.type;
+        $("notes").value = paymentType;
         updateTransferButton();
     });
 });
 
 function updateTransferButton() {
-    const validAmount = Number($("amount").value) > 0;
-    const validNotes = $("notes").value.trim().length > 0;
+    // Light up as soon as a transaction type is selected.
+    // Amount is still validated safely when Transfer is pressed.
     const hasType = Boolean(document.querySelector(".type-btn.selected"));
-    const ready = validAmount && validNotes && hasType;
-    $("transferBtn").disabled = !ready;
-    $("transferBtn").classList.toggle("ready", ready);
+    $("transferBtn").disabled = !hasType;
+    $("transferBtn").classList.toggle("ready", hasType);
 }
 
 $("amount").addEventListener("input", updateTransferButton);
@@ -866,7 +872,13 @@ $("paymentForm").addEventListener("submit", event => {
     amount = Number($("amount").value);
 
     if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Please enter a valid amount first.");
         $("amount").focus();
+        return;
+    }
+
+    if (!document.querySelector(".type-btn.selected")) {
+        alert("Please choose Salary, Payment, Bill, or Family & Friends.");
         return;
     }
 
@@ -1007,12 +1019,13 @@ $("newTransferBtn").addEventListener("click", () => {
     $("transferBtn").disabled = true;
     $("transferBtn").classList.remove("ready");
 
-    paymentType = "Salary";
+    paymentType = "";
+    $("notes").value = "";
 
     document.querySelectorAll(".type-btn").forEach(button => {
         button.classList.toggle(
             "selected",
-            button.dataset.type === "Salary"
+            false
         );
     });
 

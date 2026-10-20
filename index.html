@@ -515,6 +515,89 @@ textarea {
         color: #333;
     }
 }
+
+/* PAGE 2 — transfer screen inspired by the supplied reference */
+#page2 .subtitle { margin-bottom: 18px; }
+#page2 .info-box {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    line-height: 1.45;
+    margin: 0 0 18px;
+    font-size: 16px;
+    overflow-wrap: anywhere;
+}
+#page2 .info-box strong { font-weight: 400; }
+#page2 .info-box span { display: inline; }
+#page2 label {
+    font-size: 14px;
+    font-weight: 400;
+    margin: 18px 0 8px;
+}
+#page2 input, #page2 textarea {
+    border: 0;
+    border-bottom: 1px solid #e1e1e1;
+    border-radius: 0;
+    padding: 14px 0;
+    box-shadow: none;
+}
+#page2 input:focus, #page2 textarea:focus { border-bottom: 1px solid #b9c9d8; }
+#page2 textarea { min-height: 48px; }
+#page2 .payment-types { gap: 8px; margin-top: 10px; }
+#page2 .type-btn {
+    min-height: 48px;
+    border: 0;
+    background: #f3f3f3;
+    border-radius: 8px;
+    color: #222;
+    font-size: 12px;
+    padding: 8px 4px;
+}
+#page2 .type-btn.selected { background: var(--blue); color: #fff; }
+#page2 #transferBtn {
+    margin-top: 28px;
+    min-height: 58px;
+    border-radius: 9px;
+    font-size: 21px;
+    font-weight: 400;
+    background: #9bbbdc;
+    color: #fff;
+    opacity: .78;
+    cursor: not-allowed;
+}
+#page2 #transferBtn.ready {
+    background: var(--blue);
+    opacity: 1;
+    cursor: pointer;
+}
+#page2 .transfer-warning {
+    color: #bd7272;
+    font-size: 14px;
+    line-height: 1.45;
+    margin: 20px 4px 0;
+}
+#page2 .transfer-warning p { margin: 0 0 8px; }
+#passwordClose {
+    position: absolute;
+    right: 18px;
+    top: 12px;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 50%;
+    background: #dce3ed;
+    color: #172b4d;
+    font-size: 24px;
+}
+.keyboard-sheet { padding-top: 58px; }
+.keyboard-title { margin-top: 0; }
+.keypad { grid-template-columns: repeat(3, 1fr); }
+.keypad .key { height: 54px; }
+@media (max-width: 360px) {
+    #page2 .payment-types { gap: 5px; }
+    #page2 .type-btn { font-size: 11px; }
+}
+
 </style>
 </head>
 
@@ -552,35 +635,31 @@ textarea {
             <p class="subtitle">Enter the amount and payment details.</p>
 
             <div class="info-box">
-                <strong id="displayName"></strong><br>
-                <span id="displayPhone"></span>
+                <strong id="displayName"></strong><span id="displayPhone"></span>
             </div>
 
             <form id="paymentForm">
-                <label for="amount">Amount (MMK)</label>
-                <input id="amount" type="number" min="0.01"
-                       step="any" required placeholder="Enter amount">
+                <label for="amount">Amount (Ks)</label>
+                <input id="amount" type="number" inputmode="decimal" min="0.01"
+                       step="any" required placeholder="Enter Amount">
 
-                <label>Transaction Type</label>
-                <div class="payment-types">
-                    <button class="type-btn selected" type="button"
-                            data-type="Salary">Salary</button>
-                    <button class="type-btn" type="button"
-                            data-type="Payment">Payment</button>
-                    <button class="type-btn" type="button"
-                            data-type="Bill">Bill</button>
-                    <button class="type-btn" type="button"
-                            data-type="Family & Friends">Family & Friends</button>
+                <label for="notes">Add Notes (Mandatory)</label>
+                <textarea id="notes" required
+                          placeholder="Please add Notes"></textarea>
+
+                <div class="payment-types" aria-label="Transaction type">
+                    <button class="type-btn" type="button" data-type="Salary">Salary</button>
+                    <button class="type-btn" type="button" data-type="Payment">Payment</button>
+                    <button class="type-btn" type="button" data-type="Bill">Bill</button>
+                    <button class="type-btn" type="button" data-type="Family & Friends">Family &amp;<br>Friends</button>
                 </div>
 
-                <label for="notes">Notes</label>
-                <textarea id="notes"
-                          placeholder="Enter notes (optional)"></textarea>
-
-                <button class="btn" type="submit">Transfer</button>
-                <button class="btn secondary" id="backBtn" type="button">
-                    ← Back
-                </button>
+                <button class="btn" id="transferBtn" type="submit" disabled>Transfer</button>
+                <div class="transfer-warning">
+                    <p>* Always check the recipient's phone number and the amount to avoid incorrect transactions and fraud.</p>
+                    <p>* Please make sure to add notes to transfer.</p>
+                </div>
+                <button class="btn secondary" id="backBtn" type="button">← Back</button>
             </form>
         </section>
 
@@ -688,6 +767,7 @@ textarea {
 <div id="overlay" class="overlay"></div>
 
 <div id="keyboardSheet" class="keyboard-sheet">
+    <button id="passwordClose" type="button" aria-label="Close password keyboard">×</button>
     <div class="handle"></div>
     <div class="keyboard-title">Enter Password</div>
     <div class="keyboard-hint">Enter password to continue</div>
@@ -707,12 +787,9 @@ textarea {
         <button class="key" data-key="8">8</button>
         <button class="key" data-key="9">9</button>
 
-        <button class="key action" data-key="clear">Clear</button>
         <button class="key" data-key="0">0</button>
-        <button class="key action" data-key="backspace">⌫</button>
-
-        <button class="key action" id="cancelPassword">Cancel</button>
-        <button class="key enter" id="submitPassword">Enter ✓</button>
+        <button class="key" data-key=".">.</button>
+        <button class="key action" data-key="backspace" aria-label="Backspace">⌫</button>
     </div>
 
     <p id="passwordError" class="password-error">
@@ -766,8 +843,21 @@ document.querySelectorAll(".type-btn").forEach(button => {
 
         button.classList.add("selected");
         paymentType = button.dataset.type;
+        updateTransferButton();
     });
 });
+
+function updateTransferButton() {
+    const validAmount = Number($("amount").value) > 0;
+    const validNotes = $("notes").value.trim().length > 0;
+    const hasType = Boolean(document.querySelector(".type-btn.selected"));
+    const ready = validAmount && validNotes && hasType;
+    $("transferBtn").disabled = !ready;
+    $("transferBtn").classList.toggle("ready", ready);
+}
+
+$("amount").addEventListener("input", updateTransferButton);
+$("notes").addEventListener("input", updateTransferButton);
 
 /* PASSWORD POPUP */
 $("paymentForm").addEventListener("submit", event => {
@@ -802,32 +892,32 @@ document.querySelectorAll("[data-key]").forEach(button => {
         const key = button.dataset.key;
         $("passwordError").classList.remove("show");
 
-        if (key === "clear") {
-            passwordValue = "";
-        } else if (key === "backspace") {
+        if (key === "backspace") {
             passwordValue = passwordValue.slice(0, -1);
-        } else if (/^\d$/.test(key) && passwordValue.length < 12) {
+        } else if (/^\d$/.test(key) && passwordValue.length < 6) {
             passwordValue += key;
         }
 
         updatePasswordDisplay();
+        if (passwordValue.length === PASSWORD.length) {
+            checkPasswordAndContinue();
+        }
     });
 });
 
 $("overlay").addEventListener("click", closeKeyboard);
-$("cancelPassword").addEventListener("click", closeKeyboard);
+$("passwordClose").addEventListener("click", closeKeyboard);
 
-$("submitPassword").addEventListener("click", () => {
+function checkPasswordAndContinue() {
     if (passwordValue !== PASSWORD) {
+        $("passwordError").classList.add("show");
         passwordValue = "";
         updatePasswordDisplay();
-        $("passwordError").classList.add("show");
         return;
     }
-
     closeKeyboard();
     generateReceipt();
-});
+}
 
 /* RECEIPT */
 function generateReceipt() {
@@ -914,6 +1004,8 @@ $("newTransferBtn").addEventListener("click", () => {
     $("customerForm").reset();
     $("paymentForm").reset();
     $("qrcode").innerHTML = "";
+    $("transferBtn").disabled = true;
+    $("transferBtn").classList.remove("ready");
 
     paymentType = "Salary";
 

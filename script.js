@@ -2,6 +2,7 @@
 /* =========================================
    MYINT MYINT BUSINESS DASHBOARD
    Google Apps Script API Connection
+   Browser Cache + Auto Refresh
    Auto Refresh: 120 Seconds
 ========================================= */
 
@@ -9,6 +10,8 @@ const API_URL =
   "https://script.google.com/macros/s/AKfycbxAdLFXswMg2Bdqr0AhSCc_Ujp3VUCol5yujUNG31CCf-mo0xDzSFHIHQZsdUujSt2Rxg/exec";
 
 const REFRESH_INTERVAL = 120000;
+
+const CACHE_KEY = "MYINT_MYINT_DASHBOARD_CACHE_V1";
 
 let dailyChart = null;
 let groupChart = null;
@@ -20,13 +23,18 @@ let isLoading = false;
 ========================================= */
 
 function formatMoney(value) {
+
   return Number(value || 0).toLocaleString("en-US", {
     maximumFractionDigits: 0
   });
+
 }
 
+
 function formatNumber(value) {
+
   return Number(value || 0).toLocaleString("en-US");
+
 }
 
 
@@ -52,6 +60,138 @@ function setConnectionStatus(connected, message) {
     dot.style.background = connected ? "#28d89a" : "#ff6b78";
     dot.style.color = connected ? "#28d89a" : "#ff6b78";
   }
+
+}
+
+
+/* =========================================
+   CACHED DATA STATUS
+========================================= */
+
+function setCachedStatus() {
+
+  const label = document.getElementById("connection-label");
+  const status = document.getElementById("status-message");
+  const dot = document.querySelector(".live-dot");
+
+  if (label) {
+    label.textContent = "Saved Data";
+  }
+
+  if (status) {
+    status.textContent = "Showing saved data. Updating...";
+  }
+
+  if (dot) {
+    dot.style.background = "#f0b44d";
+    dot.style.color = "#f0b44d";
+  }
+
+}
+
+
+/* =========================================
+   SAVE DATA TO BROWSER CACHE
+========================================= */
+
+function saveDashboardCache(data) {
+
+  try {
+
+    const cacheData = {
+      savedAt: Date.now(),
+      data: data
+    };
+
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify(cacheData)
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "Dashboard cache save failed:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   LOAD DATA FROM BROWSER CACHE
+========================================= */
+
+function loadDashboardCache() {
+
+  try {
+
+    const cached = localStorage.getItem(CACHE_KEY);
+
+    if (!cached) return null;
+
+    const parsed = JSON.parse(cached);
+
+    if (
+      !parsed ||
+      !parsed.data ||
+      parsed.data.ok !== true
+    ) {
+      return null;
+    }
+
+    return parsed;
+
+  } catch (error) {
+
+    console.warn(
+      "Dashboard cache read failed:",
+      error
+    );
+
+    return null;
+
+  }
+
+}
+
+
+/* =========================================
+   SHOW CACHED DATA IMMEDIATELY
+========================================= */
+
+function showCachedDashboard() {
+
+  const cached = loadDashboardCache();
+
+  if (!cached) return false;
+
+  try {
+
+    updateDashboard(cached.data);
+
+    setCachedStatus();
+
+    console.log(
+      "Showing saved dashboard data:",
+      new Date(cached.savedAt)
+    );
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "Cached dashboard display error:",
+      error
+    );
+
+    return false;
+
+  }
+
 }
 
 
@@ -79,11 +219,15 @@ function loadDashboardData() {
 
   let completed = false;
 
+
+  // REQUEST TIMEOUT
+
   const timeout = setTimeout(() => {
 
     if (completed) return;
 
     completed = true;
+
     isLoading = false;
 
     setConnectionStatus(
@@ -93,8 +237,12 @@ function loadDashboardData() {
 
     script.remove();
 
+    delete window[callbackName];
+
   }, 20000);
 
+
+  // SUCCESS CALLBACK
 
   window[callbackName] = function(data) {
 
@@ -112,16 +260,28 @@ function loadDashboardData() {
         throw new Error("Invalid API response");
       }
 
+      // Update dashboard with fresh data
       updateDashboard(data);
+
+      // Save latest data in browser
+      saveDashboardCache(data);
 
       setConnectionStatus(
         true,
         "Data updated successfully"
       );
 
+      console.log(
+        "Fresh dashboard data received:",
+        new Date()
+      );
+
     } catch (error) {
 
-      console.error("Dashboard update error:", error);
+      console.error(
+        "Dashboard update error:",
+        error
+      );
 
       setConnectionStatus(
         false,
@@ -136,6 +296,8 @@ function loadDashboardData() {
 
   };
 
+
+  // CONNECTION ERROR
 
   script.onerror = function() {
 
@@ -159,10 +321,12 @@ function loadDashboardData() {
   };
 
 
+  // JSONP REQUEST
+
   script.src =
     API_URL +
     "?callback=" +
-    callbackName +
+    encodeURIComponent(callbackName) +
     "&_=" +
     Date.now();
 
@@ -178,9 +342,11 @@ function loadDashboardData() {
 function updateDashboard(data) {
 
   const today = data.today;
+
   const totals = data.totals || {};
 
   const daily = data.daily || [];
+
   const groups = data.groups || [];
 
   const todayData = daily.find(
@@ -208,10 +374,16 @@ function updateDashboard(data) {
 
   /* MONTHLY METRICS */
 
-  const monthlyIncome = Number(totals.income || 0);
-  const monthlyExpense = Number(totals.expense || 0);
+  const monthlyIncome = Number(
+    totals.income || 0
+  );
+
+  const monthlyExpense = Number(
+    totals.expense || 0
+  );
 
   const monthlyNet = monthlyIncome - monthlyExpense;
+
 
   setText(
     "month-net",
@@ -255,7 +427,10 @@ function updateDashboard(data) {
       }
     );
 
-    setText("month-label", monthName);
+    setText(
+      "month-label",
+      monthName
+    );
 
   }
 
@@ -756,8 +931,13 @@ function formatCompact(value) {
 
 function startDashboard() {
 
+  // 1. Show saved data immediately
+  showCachedDashboard();
+
+  // 2. Fetch fresh data immediately
   loadDashboardData();
 
+  // 3. Auto refresh every 120 seconds
   setInterval(
     loadDashboardData,
     REFRESH_INTERVAL

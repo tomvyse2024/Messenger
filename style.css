@@ -1,677 +1,750 @@
+
 /* =========================================
    MYINT MYINT BUSINESS DASHBOARD
-   Google Apps Script API Connection
-   Browser Cache + Auto Refresh
-   Auto Refresh: 120 Seconds
-   Cash Balance Display
+   Modern Dark Dashboard
+   Responsive Desktop / Tablet / Mobile
 ========================================= */
 
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbxAdLFXswMg2Bdqr0AhSCc_Ujp3VUCol5yujUNG31CCf-mo0xDzSFHIHQZsdUujSt2Rxg/exec";
+:root {
+  --bg: #0b1220;
+  --bg-soft: #101827;
+  --panel: #151f30;
+  --panel-light: #1a2639;
 
-const REFRESH_INTERVAL = 120000;
-const CACHE_KEY = "MYINT_MYINT_DASHBOARD_CACHE_V1";
+  --border: rgba(255,255,255,0.075);
 
-let dailyChart = null;
-let groupChart = null;
-let isLoading = false;
+  --text: #eef4ff;
+  --text-soft: #c1ccdc;
+  --muted: #91a0b5;
 
+  --green: #28d89a;
+  --green-soft: rgba(40,216,154,0.12);
 
-/* =========================================
-   FORMAT NUMBERS
-========================================= */
+  --red: #ff6b78;
+  --red-soft: rgba(255,107,120,0.12);
 
-function formatMoney(value) {
-  return Number(value || 0).toLocaleString("en-US", {
-    maximumFractionDigits: 0
-  });
-}
+  --blue: #6ea8ff;
+  --blue-soft: rgba(110,168,255,0.12);
 
-function formatNumber(value) {
-  return Number(value || 0).toLocaleString("en-US");
-}
+  --purple: #b59aff;
 
-
-/* =========================================
-   CONNECTION STATUS
-========================================= */
-
-function setConnectionStatus(connected, message) {
-  const label = document.getElementById("connection-label");
-  const status = document.getElementById("status-message");
-  const dot = document.querySelector(".live-dot");
-
-  if (label) {
-    label.textContent = connected ? "Live Data" : "Connection Lost";
-  }
-
-  if (status) {
-    status.textContent = message;
-  }
-
-  if (dot) {
-    dot.style.background = connected ? "#28d89a" : "#ff6b78";
-    dot.style.color = connected ? "#28d89a" : "#ff6b78";
-  }
+  --radius: 16px;
+  --shadow: 0 12px 35px rgba(0,0,0,0.18);
 }
 
 
 /* =========================================
-   CACHED DATA STATUS
+   RESET
 ========================================= */
 
-function setCachedStatus() {
-  const label = document.getElementById("connection-label");
-  const status = document.getElementById("status-message");
-  const dot = document.querySelector(".live-dot");
+* {
+  box-sizing: border-box;
+}
 
-  if (label) {
-    label.textContent = "Saved Data";
-  }
+html {
+  scroll-behavior: smooth;
+}
 
-  if (status) {
-    status.textContent = "Showing saved data. Updating...";
-  }
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(45,85,130,0.12),
+      transparent 35%
+    ),
+    var(--bg);
 
-  if (dot) {
-    dot.style.background = "#f0b44d";
-    dot.style.color = "#f0b44d";
-  }
+  color: var(--text);
+
+  font-family:
+    "Inter",
+    "Noto Sans Myanmar",
+    sans-serif;
+
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+  font: inherit;
 }
 
 
 /* =========================================
-   SAVE DATA TO BROWSER CACHE
+   PAGE LAYOUT
 ========================================= */
 
-function saveDashboardCache(data) {
-  try {
-    const cacheData = {
-      savedAt: Date.now(),
-      data: data
-    };
+.page-shell {
+  width: 100%;
+  max-width: 1500px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 34px;
+}
 
-    localStorage.setItem(
-      CACHE_KEY,
-      JSON.stringify(cacheData)
-    );
-  } catch (error) {
-    console.warn("Dashboard cache save failed:", error);
-  }
+main {
+  padding-top: 34px;
+  padding-bottom: 35px;
 }
 
 
 /* =========================================
-   LOAD DATA FROM BROWSER CACHE
+   HEADER
 ========================================= */
 
-function loadDashboardCache() {
-  try {
-    const cached = localStorage.getItem(CACHE_KEY);
+.topbar {
+  min-height: 76px;
 
-    if (!cached) return null;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    const parsed = JSON.parse(cached);
+  border-bottom: 1px solid var(--border);
+}
 
-    if (
-      !parsed ||
-      !parsed.data ||
-      parsed.data.ok !== true
-    ) {
-      return null;
-    }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
 
-    return parsed;
-  } catch (error) {
-    console.warn("Dashboard cache read failed:", error);
-    return null;
-  }
+.brand-mark {
+  width: 43px;
+  height: 43px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(135deg, #28d89a, #168f76);
+
+  color: #071a16;
+
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -1px;
+
+  box-shadow: 0 5px 18px rgba(40,216,154,0.17);
+}
+
+.brand-name {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+.brand-subtitle {
+  margin-top: 1px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+
+  display: inline-block;
+  border-radius: 50%;
+
+  background: var(--green);
+  color: var(--green);
+
+  box-shadow: 0 0 12px currentColor;
 }
 
 
 /* =========================================
-   SHOW CACHED DATA IMMEDIATELY
+   WELCOME SECTION
 ========================================= */
 
-function showCachedDashboard() {
-  const cached = loadDashboardCache();
+.welcome-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 
-  if (!cached) return false;
+  gap: 25px;
+  margin-bottom: 27px;
+}
 
-  try {
-    updateDashboard(cached.data);
-    setCachedStatus();
+.eyebrow {
+  margin: 0 0 7px;
 
-    console.log(
-      "Showing saved dashboard data:",
-      new Date(cached.savedAt)
-    );
+  color: var(--green);
 
-    return true;
-  } catch (error) {
-    console.error("Cached dashboard display error:", error);
-    return false;
-  }
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+h1 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.25;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.welcome-row .muted {
+  margin: 8px 0 0;
+}
+
+.small {
+  font-size: 11px;
+}
+
+.updated {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+
+  padding: 12px 16px;
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  background: rgba(255,255,255,0.025);
+}
+
+.updated-label {
+  color: var(--muted);
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.updated strong {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.updated .muted {
+  margin-top: 1px;
 }
 
 
 /* =========================================
-   LOAD DATA FROM GOOGLE APPS SCRIPT
+   SUMMARY METRIC CARDS
 ========================================= */
 
-function loadDashboardData() {
-  if (isLoading) return;
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
 
-  isLoading = true;
+  margin-bottom: 23px;
+}
 
-  const callbackName = "mmDashboardCallback";
-  const oldScript = document.getElementById("mm-api-script");
+.metric-card {
+  position: relative;
+  overflow: hidden;
 
-  if (oldScript) {
-    oldScript.remove();
-  }
+  min-width: 0;
+  min-height: 145px;
 
-  const script = document.createElement("script");
-  script.id = "mm-api-script";
+  padding: 20px;
 
-  let completed = false;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 
-  // REQUEST TIMEOUT
-  const timeout = setTimeout(() => {
-    if (completed) return;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.045),
+      rgba(255,255,255,0.012)
+    ),
+    var(--panel);
 
-    completed = true;
-    isLoading = false;
+  box-shadow: var(--shadow);
 
-    setConnectionStatus(
-      false,
-      "Unable to connect. Retrying..."
-    );
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
 
-    script.remove();
-    delete window[callbackName];
-  }, 20000);
+.metric-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,0.15);
+}
 
+.metric-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 
-  // SUCCESS CALLBACK
-  window[callbackName] = function(data) {
-    if (completed) return;
+.metric-label {
+  color: var(--text-soft);
 
-    completed = true;
-    clearTimeout(timeout);
-    isLoading = false;
+  font-size: 12px;
+  font-weight: 600;
+}
 
-    try {
-      if (!data || data.ok !== true) {
-        throw new Error("Invalid API response");
-      }
+.metric-icon {
+  width: 29px;
+  height: 29px;
 
-      // Update dashboard with fresh data
-      updateDashboard(data);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-      // Save latest data in browser
-      saveDashboardCache(data);
+  border-radius: 9px;
 
-      setConnectionStatus(
-        true,
-        "Data updated successfully"
-      );
+  background: rgba(255,255,255,0.055);
 
-      console.log(
-        "Fresh dashboard data received:",
-        new Date()
-      );
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+}
 
-    } catch (error) {
-      console.error("Dashboard update error:", error);
+.metric-value {
+  margin-top: 16px;
 
-      setConnectionStatus(
-        false,
-        "Data update failed"
-      );
-    }
+  color: var(--text);
 
-    script.remove();
-    delete window[callbackName];
-  };
+  font-size: clamp(19px, 2vw, 25px);
+  font-weight: 800;
+  line-height: 1.25;
 
+  letter-spacing: -0.7px;
+  font-variant-numeric: tabular-nums;
 
-  // CONNECTION ERROR
-  script.onerror = function() {
-    if (completed) return;
+  overflow-wrap: anywhere;
+}
 
-    completed = true;
-    clearTimeout(timeout);
-    isLoading = false;
+.metric-foot {
+  margin-top: 8px;
 
-    setConnectionStatus(
-      false,
-      "Connection error. Retrying..."
-    );
+  color: var(--muted);
+  font-size: 10px;
+}
 
-    script.remove();
-    delete window[callbackName];
-  };
+.income-card {
+  border-top: 2px solid var(--green);
+}
 
+.income-card .metric-icon {
+  color: var(--green);
+  background: var(--green-soft);
+}
 
-  // JSONP REQUEST
-  script.src =
-    API_URL +
-    "?callback=" +
-    encodeURIComponent(callbackName) +
-    "&_=" +
-    Date.now();
+.expense-card {
+  border-top: 2px solid var(--red);
+}
 
-  document.body.appendChild(script);
+.expense-card .metric-icon {
+  color: var(--red);
+  background: var(--red-soft);
+}
+
+.invoice-card {
+  border-top: 2px solid var(--blue);
+}
+
+.invoice-card .metric-icon {
+  color: var(--blue);
+  background: var(--blue-soft);
+}
+
+.net-card {
+  border-top: 2px solid var(--purple);
+}
+
+.net-card .metric-icon {
+  color: var(--purple);
+  background: rgba(181,154,255,0.12);
 }
 
 
 /* =========================================
-   UPDATE DASHBOARD
+   MAIN CHART GRID
 ========================================= */
 
-function updateDashboard(data) {
-  const today = data.today;
-  const totals = data.totals || {};
-  const daily = data.daily || [];
-  const groups = data.groups || [];
-  const cashAccounts = data.cashAccounts || [];
+.chart-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
 
-  const todayData = daily.find(
-    item => item.date === today
-  ) || {};
+  align-items: stretch;
+  gap: 18px;
 
+  margin-bottom: 20px;
+}
 
-  /* TODAY METRICS */
+.panel {
+  min-width: 0;
 
-  setText(
-    "today-income",
-    formatMoney(todayData.income)
-  );
+  padding: 22px;
 
-  setText(
-    "today-expense",
-    formatMoney(todayData.expense)
-  );
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 
-  setText(
-    "today-invoices",
-    formatNumber(todayData.invoices)
-  );
+  background: var(--panel);
 
+  box-shadow: var(--shadow);
+}
 
-  /* MONTHLY METRICS */
+.panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 
-  const monthlyIncome = Number(totals.income || 0);
-  const monthlyExpense = Number(totals.expense || 0);
-  const monthlyNet = monthlyIncome - monthlyExpense;
+  gap: 12px;
+  margin-bottom: 19px;
+}
 
-  setText("month-net", formatMoney(monthlyNet));
-  setText("month-income", formatMoney(monthlyIncome));
-  setText("month-expense", formatMoney(monthlyExpense));
-  setText("month-invoices", formatNumber(totals.invoices));
-  setText("month-groupsales", formatMoney(totals.groupSales));
+.panel-heading h2 {
+  margin: 0;
 
+  color: var(--text);
 
-  /* MONTH LABEL */
+  font-size: 17px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
 
-  if (data.month) {
-    const date = new Date(data.month + "-01T00:00:00");
+.panel-heading .muted {
+  margin: 5px 0 0;
+}
 
-    const monthName = date.toLocaleDateString(
-      "en-US",
-      {
-        month: "long",
-        year: "numeric"
-      }
-    );
+.panel-tag {
+  flex: 0 0 auto;
 
-    setText("month-label", monthName);
-  }
+  padding: 5px 10px;
 
+  border: 1px solid var(--border);
+  border-radius: 20px;
 
-  /* UPDATED TIME */
+  background: rgba(255,255,255,0.04);
 
-  setText("updated-at", data.updatedAt || "—");
+  color: var(--text-soft);
 
-
-  /* CHARTS */
-
-  updateDailyChart(daily);
-  updateGroupChart(groups);
-
-
-  /* GROUP TABLE */
-
-  updateGroupTable(groups);
-
-
-  /* CASH BALANCE */
-
-  updateCashAccounts(cashAccounts);
-
-
-  /* COUNTS */
-
-  setText("daily-count", daily.length + " days");
-  setText("group-count", groups.length + " groups");
+  font-size: 10px;
+  font-weight: 700;
 }
 
 
 /* =========================================
-   SAFE TEXT UPDATE
+   CHART CANVAS FIX
 ========================================= */
 
-function setText(id, value) {
-  const element = document.getElementById(id);
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
 
-  if (element) {
-    element.textContent = value;
-  }
+.chart-wrap canvas {
+  display: block;
+  width: 100% !important;
+  max-width: 100%;
+}
+
+/* Daily line chart */
+
+.daily-chart {
+  height: 285px;
+  min-height: 250px;
+}
+
+/* Group horizontal bar chart */
+
+.group-chart {
+  height: 285px;
+  min-height: 250px;
+}
+
+/* Prevent canvas from expanding its parent */
+
+.daily-chart canvas,
+.group-chart canvas {
+  height: 100% !important;
 }
 
 
 /* =========================================
-   CASH BALANCE ACCOUNTS
-   Cash: Opening / Income / Expense / Closing
-   KPay: Income only
+   CHART LEGEND
 ========================================= */
 
-function updateCashAccounts(accounts) {
-  const container = document.getElementById("cash-account-grid");
+.legend-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-  if (!container) return;
+  margin-top: 15px;
 
-  const cashAccounts = Array.isArray(accounts) ? accounts : [];
+  color: var(--text-soft);
+  font-size: 11px;
+  font-weight: 600;
+}
 
-  setText(
-    "cash-account-count",
-    cashAccounts.length + " accounts"
-  );
+.legend-dot {
+  width: 8px;
+  height: 8px;
 
-  if (cashAccounts.length === 0) {
-    container.innerHTML = `
-      <div class="cash-balance-empty">
-        Cash balance data is not available yet.
-      </div>
-    `;
-    return;
-  }
+  display: inline-block;
+  border-radius: 50%;
+}
 
-  container.innerHTML = cashAccounts.map(account => {
-    const name = escapeHTML(account.name || "Unknown");
-    const type = String(account.type || "").toLowerCase();
-    const isCash = type === "cash";
-    const sync = account.sync
-      ? "Last sync · " + escapeHTML(account.sync)
-      : "";
+.income-dot {
+  margin-left: 2px;
+  background: var(--green);
+}
 
-    if (isCash) {
-      return `
-        <article class="cash-account-card cash-account">
-          <div class="cash-account-top">
-            <span class="cash-account-name">${name}</span>
-            <span class="cash-account-type">CASH</span>
-          </div>
-
-          <div class="cash-account-values">
-            <div class="cash-value">
-              <span class="cash-value-label">Opening</span>
-              <strong class="cash-value-number">${formatMoney(account.opening)}</strong>
-            </div>
-
-            <div class="cash-value">
-              <span class="cash-value-label">Income</span>
-              <strong class="cash-value-number cash-positive">${formatMoney(account.income)}</strong>
-            </div>
-
-            <div class="cash-value">
-              <span class="cash-value-label">Expense</span>
-              <strong class="cash-value-number cash-negative">${formatMoney(account.expense)}</strong>
-            </div>
-
-            <div class="cash-value">
-              <span class="cash-value-label">Closing</span>
-              <strong class="cash-value-number">${formatMoney(account.closing)}</strong>
-            </div>
-          </div>
-
-          ${sync ? `<div class="cash-account-sync">${sync}</div>` : ""}
-        </article>
-      `;
-    }
-
-    // KPay accounts display Income only.
-    return `
-      <article class="cash-account-card kpay-account">
-        <div class="cash-account-top">
-          <span class="cash-account-name">${name}</span>
-          <span class="cash-account-type">KPay</span>
-        </div>
-
-        <div class="cash-account-values">
-          <div class="cash-value">
-            <span class="cash-value-label">Income</span>
-            <strong class="cash-value-number cash-positive">${formatMoney(account.income)}</strong>
-          </div>
-        </div>
-
-        ${sync ? `<div class="cash-account-sync">${sync}</div>` : ""}
-      </article>
-    `;
-  }).join("");
+.expense-dot {
+  margin-left: 9px;
+  background: var(--red);
 }
 
 
 /* =========================================
-   DAILY SALES & EXPENSE CHART
+   CASH BALANCE SECTION
 ========================================= */
 
-function updateDailyChart(daily) {
-  const canvas = document.getElementById("dailyChart");
+.cash-balance-section {
+  margin-top: 25px;
+  padding-top: 23px;
 
-  if (!canvas || typeof Chart === "undefined") return;
+  border-top: 1px solid var(--border);
+}
 
-  const labels = daily.map(item => {
-    const date = String(item.date || "");
-    return date.slice(8, 10);
-  });
+.cash-balance-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 
-  const income = daily.map(
-    item => Number(item.income || 0)
-  );
+  gap: 12px;
+  margin-bottom: 16px;
+}
 
-  const expense = daily.map(
-    item => Number(item.expense || 0)
-  );
+.cash-balance-heading h3 {
+  margin: 0;
 
-  const chartData = {
-    labels: labels,
-    datasets: [
-      {
-        label: "Income",
-        data: income,
-        borderColor: "#28d89a",
-        backgroundColor: "rgba(40,216,154,0.10)",
-        borderWidth: 2.5,
-        pointRadius: 3,
-        pointHoverRadius: 6,
-        tension: 0.35,
-        fill: true
-      },
-      {
-        label: "Expense",
-        data: expense,
-        borderColor: "#ff6b78",
-        backgroundColor: "rgba(255,107,120,0.05)",
-        borderWidth: 2.5,
-        pointRadius: 3,
-        pointHoverRadius: 6,
-        tension: 0.35,
-        fill: false
-      }
-    ]
-  };
+  color: var(--text);
 
-  if (dailyChart) {
-    dailyChart.data = chartData;
-    dailyChart.update("none");
-    return;
-  }
+  font-size: 17px;
+  font-weight: 750;
+}
 
-  dailyChart = new Chart(canvas, {
-    type: "line",
-    data: chartData,
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
-        intersect: false,
-        mode: "index"
-      },
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: "#101827",
-          titleColor: "#ffffff",
-          bodyColor: "#dce5f1",
-          borderColor: "rgba(255,255,255,0.1)",
-          borderWidth: 1,
-          callbacks: {
-            label: function(context) {
-              return context.dataset.label +
-                ": " +
-                formatMoney(context.raw) +
-                " MMK";
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            display: false
-          },
-          ticks: {
-            color: "#91a0b5",
-            font: {
-              size: 10
-            }
-          }
-        },
-        y: {
-          beginAtZero: true,
-          grid: {
-            color: "rgba(255,255,255,0.06)"
-          },
-          ticks: {
-            color: "#91a0b5",
-            font: {
-              size: 10
-            },
-            callback: function(value) {
-              return formatCompact(value);
-            }
-          }
-        }
-      }
-    }
-  });
+.cash-balance-heading .muted {
+  margin: 5px 0 0;
+}
+
+.cash-balance-tag {
+  flex: 0 0 auto;
+
+  padding: 6px 11px;
+
+  border: 1px solid var(--border);
+  border-radius: 20px;
+
+  background: rgba(255,255,255,0.045);
+
+  color: var(--text-soft);
+
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 
-/* =========================================
-   GROUP SALES CHART
-========================================= */
+/* Account card grid */
 
-function updateGroupChart(groups) {
-  const canvas = document.getElementById("groupChart");
+.cash-account-grid {
+  display: grid;
 
-  if (!canvas || typeof Chart === "undefined") return;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  const sortedGroups = [...groups].sort(
-    (a, b) => Number(b.amount || 0) - Number(a.amount || 0)
-  );
+  gap: 12px;
+}
 
-  const labels = sortedGroups.map(
-    item => item.name
-  );
 
-  const values = sortedGroups.map(
-    item => Number(item.amount || 0)
-  );
+/* Individual account card */
 
-  const chartData = {
-    labels: labels,
-    datasets: [
-      {
-        label: "Sales Amount",
-        data: values,
-        backgroundColor: "#28d89a",
-        borderRadius: 5,
-        barThickness: 13,
-        maxBarThickness: 16
-      }
-    ]
-  };
+.cash-account-card {
+  min-width: 0;
+  overflow: hidden;
 
-  if (groupChart) {
-    groupChart.data = chartData;
-    groupChart.update("none");
-    return;
-  }
+  padding: 15px;
 
-  groupChart = new Chart(canvas, {
-    type: "bar",
-    data: chartData,
-    options: {
-      indexAxis: "y",
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return formatMoney(context.raw) + " MMK";
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          beginAtZero: true,
-          grid: {
-            color: "rgba(255,255,255,0.06)"
-          },
-          ticks: {
-            color: "#91a0b5",
-            font: {
-              size: 9
-            },
-            callback: function(value) {
-              return formatCompact(value);
-            }
-          }
-        },
-        y: {
-          grid: {
-            display: false
-          },
-          ticks: {
-            color: "#dce5f1",
-            font: {
-              size: 10
-            }
-          }
-        }
-      }
-    }
-  });
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  background: rgba(255,255,255,0.025);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cash-account-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.045);
+  border-color: rgba(255,255,255,0.14);
+}
+
+.cash-account-card.cash-account {
+  border-left: 3px solid var(--green);
+}
+
+.cash-account-card.kpay-account {
+  border-left: 3px solid var(--blue);
+}
+
+
+/* Account heading */
+
+.cash-account-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.cash-account-name {
+  min-width: 0;
+
+  color: var(--text);
+
+  font-size: 13px;
+  font-weight: 750;
+
+  overflow-wrap: anywhere;
+}
+
+.cash-account-type {
+  flex: 0 0 auto;
+
+  padding: 3px 7px;
+
+  border-radius: 5px;
+
+  background: rgba(255,255,255,0.06);
+
+  color: var(--muted);
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+.cash-account.cash-account .cash-account-type {
+  color: var(--green);
+  background: var(--green-soft);
+}
+
+.kpay-account .cash-account-type {
+  color: var(--blue);
+  background: var(--blue-soft);
+}
+
+
+/* Account values */
+
+.cash-account-values {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 13px 10px;
+}
+
+.cash-value {
+  min-width: 0;
+}
+
+.cash-value-label {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.cash-value-number {
+  display: block;
+
+  color: var(--text);
+
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.4;
+
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.cash-value-number.cash-positive {
+  color: var(--green);
+}
+
+.cash-value-number.cash-negative {
+  color: var(--red);
+}
+
+
+/* Account sync */
+
+.cash-account-sync {
+  margin-top: 13px;
+  padding-top: 9px;
+
+  border-top: 1px solid rgba(255,255,255,0.06);
+
+  color: #718096;
+  font-size: 9px;
+}
+
+
+/* Empty state */
+
+.cash-balance-empty {
+  grid-column: 1 / -1;
+
+  padding: 22px 12px;
+
+  border: 1px dashed rgba(255,255,255,0.14);
+  border-radius: 11px;
+
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
 }
 
 
@@ -679,103 +752,498 @@ function updateGroupChart(groups) {
    GROUP SALES TABLE
 ========================================= */
 
-function updateGroupTable(groups) {
-  const tbody = document.getElementById("group-table");
+.group-table-wrap {
+  width: 100%;
+  max-height: 360px;
 
-  if (!tbody) return;
+  margin-top: 18px;
 
-  if (!groups.length) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="3" class="empty">
-          No group sales data
-        </td>
-      </tr>
-    `;
-    return;
-  }
+  overflow: auto;
 
-  const sortedGroups = [...groups].sort(
-    (a, b) => Number(b.amount || 0) - Number(a.amount || 0)
-  );
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
 
-  tbody.innerHTML = sortedGroups.map(item => {
-    const name = escapeHTML(item.name || "Unknown");
-    const quantity = formatNumber(item.quantity);
-    const amount = formatMoney(item.amount);
+table {
+  width: 100%;
+  border-collapse: collapse;
 
-    return `
-      <tr>
-        <td>${name}</td>
-        <td class="num">${quantity}</td>
-        <td class="num">${amount}</td>
-      </tr>
-    `;
-  }).join("");
+  font-size: 11px;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  background: #1b293d;
+}
+
+th {
+  padding: 11px 12px;
+
+  color: var(--text-soft);
+
+  font-size: 10px;
+  font-weight: 750;
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+td {
+  padding: 11px 12px;
+
+  border-top: 1px solid rgba(255,255,255,0.045);
+
+  color: var(--text-soft);
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+tbody tr {
+  transition: background 0.15s ease;
+}
+
+tbody tr:hover {
+  background: rgba(255,255,255,0.035);
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+td:first-child {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.empty {
+  padding: 22px 10px;
+  color: var(--muted);
+  text-align: center;
 }
 
 
 /* =========================================
-   HTML ESCAPE
+   MONTHLY SUMMARY
 ========================================= */
 
-function escapeHTML(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+.monthly-panel {
+  margin-bottom: 25px;
+}
+
+.summary-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 12px;
+  margin-top: 19px;
+}
+
+.summary-grid > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+
+  padding: 16px;
+
+  border: 1px solid var(--border);
+  border-radius: 11px;
+
+  background: rgba(255,255,255,0.025);
+}
+
+.summary-grid span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.summary-grid strong {
+  color: var(--text);
+
+  font-size: clamp(15px, 1.7vw, 20px);
+  font-weight: 800;
+
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.summary-grid strong.positive {
+  color: var(--green);
+}
+
+.summary-grid strong.negative {
+  color: var(--red);
 }
 
 
 /* =========================================
-   COMPACT NUMBER FORMAT
+   FOOTER
 ========================================= */
 
-function formatCompact(value) {
-  const number = Number(value || 0);
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  if (number >= 1000000000) {
-    return (number / 1000000000).toFixed(1) + "B";
-  }
+  gap: 15px;
 
-  if (number >= 1000000) {
-    return (number / 1000000).toFixed(1) + "M";
-  }
+  padding: 17px 0 22px;
 
-  if (number >= 1000) {
-    return (number / 1000).toFixed(0) + "K";
-  }
+  border-top: 1px solid var(--border);
 
-  return number;
+  color: #718096;
+  font-size: 10px;
+}
+
+#status-message {
+  text-align: right;
 }
 
 
 /* =========================================
-   START DASHBOARD
+   TABLET RESPONSIVE
 ========================================= */
 
-function startDashboard() {
-  // 1. Show saved data immediately
-  showCachedDashboard();
+@media (max-width: 1050px) {
 
-  // 2. Fetch fresh data immediately
-  loadDashboardData();
+  .page-shell {
+    padding: 0 24px;
+  }
 
-  // 3. Auto refresh every 120 seconds
-  setInterval(
-    loadDashboardData,
-    REFRESH_INTERVAL
-  );
+  .metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .daily-chart {
+    height: 300px;
+  }
+
+  .group-chart {
+    height: 300px;
+  }
+
+  .cash-account-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
 }
 
 
 /* =========================================
-   INITIALIZE
+   MOBILE RESPONSIVE
 ========================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  startDashboard
-);
+@media (max-width: 600px) {
+
+  .page-shell {
+    padding: 0 14px;
+  }
+
+  main {
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
+
+  .topbar {
+    min-height: 66px;
+  }
+
+  .brand {
+    gap: 9px;
+  }
+
+  .brand-mark {
+    width: 37px;
+    height: 37px;
+    border-radius: 11px;
+    font-size: 15px;
+  }
+
+  .brand-name {
+    font-size: 13px;
+  }
+
+  .brand-subtitle {
+    font-size: 8px;
+  }
+
+  .topbar-right {
+    gap: 7px;
+    font-size: 10px;
+  }
+
+  .live-dot {
+    width: 7px;
+    height: 7px;
+  }
+
+
+  /* Welcome */
+
+  .welcome-row {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 25px;
+  }
+
+  .updated {
+    width: 100%;
+    align-items: flex-start;
+    padding: 10px 13px;
+  }
+
+
+  /* Metric cards */
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+
+    margin-bottom: 15px;
+  }
+
+  .metric-card {
+    min-height: 125px;
+    padding: 13px;
+    border-radius: 12px;
+  }
+
+  .metric-label {
+    font-size: 10px;
+  }
+
+  .metric-icon {
+    width: 25px;
+    height: 25px;
+    font-size: 13px;
+  }
+
+  .metric-value {
+    margin-top: 13px;
+    font-size: clamp(16px, 4.5vw, 21px);
+    letter-spacing: -0.5px;
+  }
+
+  .metric-foot {
+    margin-top: 6px;
+    font-size: 9px;
+  }
+
+
+  /* Panels */
+
+  .chart-grid {
+    gap: 13px;
+    margin-bottom: 14px;
+  }
+
+  .panel {
+    padding: 15px;
+    border-radius: 13px;
+  }
+
+  .panel-heading {
+    margin-bottom: 15px;
+  }
+
+  .panel-heading h2 {
+    font-size: 15px;
+  }
+
+  .panel-tag {
+    padding: 4px 8px;
+    font-size: 9px;
+  }
+
+
+  /* Charts */
+
+  .daily-chart {
+    height: 245px;
+    min-height: 220px;
+  }
+
+  .group-chart {
+    height: 260px;
+    min-height: 230px;
+  }
+
+  .legend-note {
+    margin-top: 12px;
+    font-size: 10px;
+  }
+
+
+  /* Cash balance */
+
+  .cash-balance-section {
+    margin-top: 21px;
+    padding-top: 19px;
+  }
+
+  .cash-balance-heading {
+    margin-bottom: 13px;
+  }
+
+  .cash-balance-heading h3 {
+    font-size: 15px;
+  }
+
+  .cash-balance-tag {
+    padding: 5px 8px;
+    font-size: 9px;
+  }
+
+  .cash-account-grid {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .cash-account-card {
+    padding: 13px;
+    border-radius: 10px;
+  }
+
+  .cash-account-top {
+    margin-bottom: 12px;
+  }
+
+  .cash-account-name {
+    font-size: 12px;
+  }
+
+  .cash-value-label {
+    font-size: 10px;
+  }
+
+  .cash-value-number {
+    font-size: 12px;
+  }
+
+
+  /* Group table */
+
+  .group-table-wrap {
+    margin-top: 14px;
+    max-height: 300px;
+  }
+
+  th {
+    padding: 10px 8px;
+    font-size: 9px;
+  }
+
+  td {
+    padding: 10px 8px;
+    font-size: 10px;
+  }
+
+
+  /* Monthly summary */
+
+  .monthly-panel {
+    margin-bottom: 17px;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 14px;
+  }
+
+  .summary-grid > div {
+    padding: 13px;
+    gap: 7px;
+  }
+
+  .summary-grid span {
+    font-size: 10px;
+  }
+
+  .summary-grid strong {
+    font-size: 16px;
+  }
+
+
+  /* Footer */
+
+  footer {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 7px;
+    padding: 14px 0 20px;
+
+    font-size: 9px;
+  }
+
+  #status-message {
+    text-align: left;
+  }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 360px) {
+
+  .page-shell {
+    padding: 0 10px;
+  }
+
+  .metric-card {
+    padding: 11px;
+  }
+
+  .metric-value {
+    font-size: 16px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .cash-account-card {
+    padding: 11px;
+  }
+
+}
+
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+}

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,20 +13,176 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+  <style>
+    .cash-balance-section {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .cash-balance-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .cash-balance-heading h3 {
+      margin: 0;
+      color: #eef4ff;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .cash-balance-heading .muted {
+      margin-top: 5px;
+    }
+
+    .cash-balance-tag {
+      flex: 0 0 auto;
+      padding: 6px 10px;
+      border-radius: 20px;
+      color: #aebbd0;
+      background: rgba(255,255,255,0.06);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .cash-account-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .cash-account-card {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .cash-account-card.cash-account {
+      border-left: 3px solid #28d89a;
+    }
+
+    .cash-account-card.kpay-account {
+      border-left: 3px solid #6ea8ff;
+    }
+
+    .cash-account-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 13px;
+    }
+
+    .cash-account-name {
+      min-width: 0;
+      color: #eef4ff;
+      font-size: 13px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .cash-account-type {
+      flex: 0 0 auto;
+      color: #9eacc1;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .cash-account-values {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 11px 10px;
+    }
+
+    .cash-value {
+      min-width: 0;
+    }
+
+    .cash-value-label {
+      display: block;
+      margin-bottom: 4px;
+      color: #91a0b5;
+      font-size: 10px;
+    }
+
+    .cash-value-number {
+      display: block;
+      color: #e7edf7;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cash-value-number.cash-positive {
+      color: #28d89a;
+    }
+
+    .cash-value-number.cash-negative {
+      color: #ff8791;
+    }
+
+    .cash-account-sync {
+      margin-top: 12px;
+      padding-top: 9px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      color: #718096;
+      font-size: 10px;
+    }
+
+    .cash-balance-empty {
+      grid-column: 1 / -1;
+      padding: 18px 12px;
+      border: 1px dashed rgba(255,255,255,0.13);
+      border-radius: 10px;
+      color: #91a0b5;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 520px) {
+      .cash-account-grid {
+        grid-template-columns: 1fr;
+        gap: 9px;
+      }
+
+      .cash-account-card {
+        padding: 12px;
+      }
+
+      .cash-account-name {
+        font-size: 12px;
+      }
+
+      .cash-value-number {
+        font-size: 12px;
+      }
+
+      .cash-balance-heading h3 {
+        font-size: 15px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-
   <div class="page-shell">
 
     <!-- HEADER -->
     <header class="topbar">
-
       <div class="brand">
         <div class="brand-mark">MM</div>
-
         <div>
           <div class="brand-name">MYINT MYINT</div>
           <div class="brand-subtitle">BUSINESS DASHBOARD</div>
@@ -38,35 +193,24 @@
         <span class="live-dot"></span>
         <span id="connection-label">Connecting...</span>
       </div>
-
     </header>
-
 
     <main>
 
       <!-- WELCOME -->
       <section class="welcome-row">
-
         <div>
           <p class="eyebrow">OVERVIEW</p>
           <h1>Business Overview</h1>
-          <p class="muted" id="month-label">
-            Loading current month...
-          </p>
+          <p class="muted" id="month-label">Loading current month...</p>
         </div>
 
         <div class="updated">
           <span class="updated-label">LAST UPDATED</span>
-
           <strong id="updated-at">—</strong>
-
-          <span class="muted small">
-            Auto refresh · 2 minutes
-          </span>
+          <span class="muted small">Auto refresh · 2 minutes</span>
         </div>
-
       </section>
-
 
       <!-- SUMMARY CARDS -->
       <section class="metrics-grid">
@@ -76,81 +220,51 @@
             <span class="metric-label">Today's Income</span>
             <span class="metric-icon">↗</span>
           </div>
-
           <div class="metric-value" id="today-income">—</div>
-
-          <div class="metric-foot">
-            MMK · Daily sales
-          </div>
+          <div class="metric-foot">MMK · Daily sales</div>
         </article>
-
 
         <article class="metric-card expense-card">
           <div class="metric-top">
             <span class="metric-label">Today's Expense</span>
             <span class="metric-icon">↘</span>
           </div>
-
           <div class="metric-value" id="today-expense">—</div>
-
-          <div class="metric-foot">
-            MMK · Daily expenses
-          </div>
+          <div class="metric-foot">MMK · Daily expenses</div>
         </article>
-
 
         <article class="metric-card invoice-card">
           <div class="metric-top">
             <span class="metric-label">Today's Invoices</span>
             <span class="metric-icon">▤</span>
           </div>
-
           <div class="metric-value" id="today-invoices">—</div>
-
-          <div class="metric-foot">
-            Invoices · Today
-          </div>
+          <div class="metric-foot">Invoices · Today</div>
         </article>
-
 
         <article class="metric-card net-card">
           <div class="metric-top">
             <span class="metric-label">Monthly Net</span>
             <span class="metric-icon">∑</span>
           </div>
-
           <div class="metric-value" id="month-net">—</div>
-
-          <div class="metric-foot">
-            Income − Expense · MMK
-          </div>
+          <div class="metric-foot">Income − Expense · MMK</div>
         </article>
 
       </section>
-
 
       <!-- CHARTS -->
       <section class="chart-grid">
 
         <!-- DAILY SALES & EXPENSE -->
         <article class="panel daily-panel">
-
           <div class="panel-heading">
-
             <div>
               <p class="eyebrow">MONTHLY TREND</p>
-
               <h2>Daily Sales &amp; Expense</h2>
-
-              <p class="muted small">
-                Current month · MMK
-              </p>
+              <p class="muted small">Current month · MMK</p>
             </div>
-
-            <span class="panel-tag" id="daily-count">
-              — days
-            </span>
-
+            <span class="panel-tag" id="daily-count">— days</span>
           </div>
 
           <div class="chart-wrap daily-chart">
@@ -160,33 +274,36 @@
           <div class="legend-note">
             <span class="legend-dot income-dot"></span>
             Income
-
             <span class="legend-dot expense-dot"></span>
             Expense
           </div>
 
-        </article>
+          <!-- CASH BALANCE -->
+          <section class="cash-balance-section" aria-labelledby="cash-balance-title">
+            <div class="cash-balance-heading">
+              <div>
+                <p class="eyebrow">TODAY'S ACCOUNTS</p>
+                <h3 id="cash-balance-title">Cash Balance</h3>
+                <p class="muted small">Cash accounts and KPay income · MMK</p>
+              </div>
+              <span class="cash-balance-tag" id="cash-account-count">— accounts</span>
+            </div>
 
+            <div class="cash-account-grid" id="cash-account-grid">
+              <div class="cash-balance-empty">Loading cash balance...</div>
+            </div>
+          </section>
+        </article>
 
         <!-- GROUP SALES -->
         <article class="panel group-panel">
-
           <div class="panel-heading">
-
             <div>
               <p class="eyebrow">CATEGORY PERFORMANCE</p>
-
               <h2>Group Sales</h2>
-
-              <p class="muted small">
-                Current month · MMK
-              </p>
+              <p class="muted small">Current month · MMK</p>
             </div>
-
-            <span class="panel-tag" id="group-count">
-              — groups
-            </span>
-
+            <span class="panel-tag" id="group-count">— groups</span>
           </div>
 
           <div class="chart-wrap group-chart">
@@ -194,9 +311,7 @@
           </div>
 
           <div class="group-table-wrap">
-
             <table>
-
               <thead>
                 <tr>
                   <th>Group</th>
@@ -204,27 +319,19 @@
                   <th class="num">Sales (MMK)</th>
                 </tr>
               </thead>
-
               <tbody id="group-table">
                 <tr>
-                  <td colspan="3" class="empty">
-                    Loading...
-                  </td>
+                  <td colspan="3" class="empty">Loading...</td>
                 </tr>
               </tbody>
-
             </table>
-
           </div>
-
         </article>
 
       </section>
 
-
       <!-- MONTHLY SUMMARY -->
       <section class="panel monthly-panel">
-
         <div class="panel-heading">
           <div>
             <p class="eyebrow">MONTH TO DATE</p>
@@ -233,52 +340,35 @@
         </div>
 
         <div class="summary-grid">
-
           <div>
             <span>Total Income</span>
             <strong class="positive" id="month-income">—</strong>
           </div>
-
           <div>
             <span>Total Expense</span>
             <strong class="negative" id="month-expense">—</strong>
           </div>
-
           <div>
             <span>Total Invoices</span>
             <strong id="month-invoices">—</strong>
           </div>
-
           <div>
             <span>Group Sales</span>
             <strong id="month-groupsales">—</strong>
           </div>
-
         </div>
-
       </section>
 
     </main>
 
-
     <!-- FOOTER -->
     <footer>
-
-      <span>
-        MYINT MYINT · Public read-only dashboard
-      </span>
-
-      <span id="status-message">
-        Waiting for data...
-      </span>
-
+      <span>MYINT MYINT · Public read-only dashboard</span>
+      <span id="status-message">Waiting for data...</span>
     </footer>
 
   </div>
 
-
-  <!-- JAVASCRIPT -->
   <script src="script.js"></script>
-
 </body>
 </html>
